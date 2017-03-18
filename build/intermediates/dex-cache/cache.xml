@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="C:\Users\helde\MEOCloud\Welcome kit\MiEI\Tese\Codigo(Third Party)\TrafficSignsDetection-master\trafficSignsDetectionmaster\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="21.1.2"
+        sha1="a3c5eb812ca20c480ae49221cec8cf2a053d2d85">
+        <dex dex="C:\Users\helde\MEOCloud\Welcome kit\MiEI\Tese\Codigo(Third Party)\TrafficSignsDetection-master\trafficSignsDetectionmaster\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_8df7d22c734d95c07a8e20f5488e196b1ba17d89\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\helde\MEOCloud\Welcome kit\MiEI\Tese\Codigo(Third Party)\TrafficSignsDetection-master\trafficSignsDetectionmaster\build\intermediates\exploded-aar\com.android.support\support-v4\22.0.0\jars\libs\internal_impl-22.0.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="21.1.2"
+        sha1="b5b92f469d515a13d778900f6d50c03d12f35504">
+        <dex dex="C:\Users\helde\MEOCloud\Welcome kit\MiEI\Tese\Codigo(Third Party)\TrafficSignsDetection-master\trafficSignsDetectionmaster\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-22.0.0_9639be41d9643bf265beac0a6057c381fde81723\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\helde\MEOCloud\Welcome kit\MiEI\Tese\Codigo(Third Party)\TrafficSignsDetection-master\trafficSignsDetectionmaster\build\intermediates\exploded-aar\com.android.support\support-v4\22.0.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="21.1.2"
+        sha1="4e86306289ace4aa0cfec44a05ed2b410d36989d">
+        <dex dex="C:\Users\helde\MEOCloud\Welcome kit\MiEI\Tese\Codigo(Third Party)\TrafficSignsDetection-master\trafficSignsDetectionmaster\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-v4-22.0.0_3e80e436a5e3f59320a1e709a4843b210c263fc8\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\helde\MEOCloud\Welcome kit\MiEI\Tese\Codigo(Third Party)\TrafficSignsDetection-master\trafficSignsDetectionmaster\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="21.1.2"
+        sha1="337ff86ab110c71d9f3f3244117078137f951ab2">
+        <dex dex="C:\Users\helde\MEOCloud\Welcome kit\MiEI\Tese\Codigo(Third Party)\TrafficSignsDetection-master\trafficSignsDetectionmaster\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_fd197ff150ac4145451233052fc8fe0762c33873\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\helde\AppData\Local\Android\Sdk\extras\android\m2repository\com\android\support\support-annotations\22.0.0\support-annotations-22.0.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="21.1.2"
+        sha1="685d0b2c590447e85284ed84712cb363ba04eff8">
+        <dex dex="C:\Users\helde\MEOCloud\Welcome kit\MiEI\Tese\Codigo(Third Party)\TrafficSignsDetection-master\trafficSignsDetectionmaster\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-22.0.0_2ab06139195be8d957ffa0a413eb08f44f52598b\classes.dex" />
+    </item>
+
+</items>
