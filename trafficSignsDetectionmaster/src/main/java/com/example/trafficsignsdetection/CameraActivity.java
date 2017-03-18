@@ -251,25 +251,15 @@ public class CameraActivity extends Activity implements CvCameraViewListener2{
 			if(typee == 1){
 				bt = Utilities.convertMatToBitmap(subMat);
 				Sign.myMap.put("Prohibition sign - Width "+width, bt);
-				/*mLocation = fusedInstance.getLastLocation();
-				double latitude = mLocation.getLatitude();
-				double longitude = mLocation.getLongitude();
-
-				coordinates = latitude + ", " + longitude;*/
 				Utilities.writeToFile("Prohibition sign - " + coordinates + "\n", getApplicationContext());
-				signRecognized = tfPreviewListener.recognizeSign(bt);
+				//signRecognized = tfPreviewListener.recognizeSign(bt);
 				//Utilities.storeImage(bt, counter++);
 			}
 			else if(typee == 2){
 				bt = Utilities.convertMatToBitmap(subMat);
 				Sign.myMap.put("Danger sign - Width "+width, bt);
-				/*mLocation = fusedInstance.getLastLocation();
-				double latitude = mLocation.getLatitude();
-				double longitude = mLocation.getLongitude();
-
-				coordinates = latitude + ", " + longitude;*/
 				Utilities.writeToFile("Danger sign - " + coordinates + "\n", getApplicationContext());
-				signRecognized = tfPreviewListener.recognizeSign(bt);
+				//signRecognized = tfPreviewListener.recognizeSign(bt);
 				//Utilities.storeImage(bt, counter++);
 			}
 			else if(typee == 3)

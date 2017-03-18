@@ -44,8 +44,7 @@ public class TensorFlowImageListener {
     private static final String OUTPUT_NAME = "out/Softmax:0";
 
     private static final String MODEL_FILE = "file:///android_asset/output_graph.pb";
-    private static final String LABEL_FILE = "";
-    //"file:///android_asset/imagenet_comp_graph_label_strings.txt";
+    private static final String LABEL_FILE = "file:///android_asset/labels_sinais.txt";
 
 
     private final TensorFlowClassifier tensorflow = new TensorFlowClassifier();
