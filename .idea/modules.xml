@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/TrafficSignsDetection-master.iml" filepath="$PROJECT_DIR$/TrafficSignsDetection-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Community_Based_Repository_Traffic_Signs.iml" filepath="$PROJECT_DIR$/Community_Based_Repository_Traffic_Signs.iml" />
       <module fileurl="file://$PROJECT_DIR$/openCVLibrary249/openCVLibrary249.iml" filepath="$PROJECT_DIR$/openCVLibrary249/openCVLibrary249.iml" />
       <module fileurl="file://$PROJECT_DIR$/trafficSignsDetectionmaster/trafficSignsDetectionmaster.iml" filepath="$PROJECT_DIR$/trafficSignsDetectionmaster/trafficSignsDetectionmaster.iml" />
     </modules>

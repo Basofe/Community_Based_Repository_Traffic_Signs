@@ -1,8 +1,11 @@
 package com.example.trafficsignsdetection.GeoLocation;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -57,6 +60,7 @@ public class FusedLocationSingleton implements GoogleApiClient.ConnectionCallbac
     }
 
     ///////////// 1
+
     /**
      * builds a GoogleApiClient
      */
@@ -72,6 +76,7 @@ public class FusedLocationSingleton implements GoogleApiClient.ConnectionCallbac
     }
 
     ///////////// 2
+
     /**
      * config request location update
      */
@@ -84,10 +89,21 @@ public class FusedLocationSingleton implements GoogleApiClient.ConnectionCallbac
     }
 
     ///////////// 3
+
     /**
      * request location updates
      */
     private void requestLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(FusedLocationSingletonAPP.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(FusedLocationSingletonAPP.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient,
                 mLocationRequest,
@@ -124,7 +140,6 @@ public class FusedLocationSingleton implements GoogleApiClient.ConnectionCallbac
      */
     public Location getLastLocation() {
         if (null != mGoogleApiClient && mGoogleApiClient.isConnected()) {
-            // return last location
             return LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         }
         else {

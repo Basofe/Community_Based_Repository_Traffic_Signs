@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="play-services-location-10.0.1">
     <CLASSES>
-      <root url="file://C:/tmp/TrafficSignsDetection-master/trafficSignsDetectionmaster/intermediates/exploded-aar/com.google.android.gms/play-services-location/10.0.1/res" />
-      <root url="jar://C:/tmp/TrafficSignsDetection-master/trafficSignsDetectionmaster/intermediates/exploded-aar/com.google.android.gms/play-services-location/10.0.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.android/build-cache/71dcb92c98b6a729b90af5a87a097466c7a4756a/output/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/71dcb92c98b6a729b90af5a87a097466c7a4756a/output/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

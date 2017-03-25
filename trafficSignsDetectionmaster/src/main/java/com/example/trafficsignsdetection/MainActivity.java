@@ -43,13 +43,13 @@ public class MainActivity extends Activity implements OnClickListener {
 			startActivity(runtimeIntent);
 			return;
 		case R.id.btTakePhoto:
-			//Intent takePhotoIntent = new Intent(MainActivity.this, TakePhotoActivity.class);
-			//startActivity(takePhotoIntent);
+			Intent sensorsTest = new Intent(MainActivity.this, SensorActivityTest.class);
+			startActivity(sensorsTest);
 			return;
 		case R.id.btPickPhoto:
-			Intent pickPhotoIntent = new Intent(MainActivity.this, PhotoActivity.class);
+			/*Intent pickPhotoIntent = new Intent(MainActivity.this, PhotoActivity.class);
 			startActivity(pickPhotoIntent);
-			break;
+			break;*/
 		default:
 			break;
 		}

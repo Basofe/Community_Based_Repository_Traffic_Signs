@@ -21,6 +21,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.app.Activity;
@@ -42,13 +46,17 @@ import com.example.trafficsignsdetection.GeoLocation.Const;
 import com.example.trafficsignsdetection.GeoLocation.FusedLocationSingleton;
 import com.example.trafficsignsdetection.Utils.Utilities;
 
-public class CameraActivity extends Activity implements CvCameraViewListener2{
+public class CameraActivity extends Activity implements CvCameraViewListener2, SensorEventListener{
 
 	FusedLocationSingleton fusedInstance;
 	private TensorFlowImageListener tfPreviewListener;
 	Location mLocation;
 	String coordinates;
 	String signRecognized = "";
+
+	private Sensor mySensor;
+	private SensorManager SM;
+
 	
 	private static final Scalar    FACE_RECT_COLOR     = new Scalar(0, 255, 0, 255);
 	private CameraBridgeViewBase mCameraView;
@@ -85,7 +93,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2{
 
 		//detector = new Detector(CameraActivity.this);
 	private void Initialize(){
-		//detector = new Detector();
+		//OPENCV
 		mCameraView = (CameraBridgeViewBase)findViewById(R.id.mCameraView);
 		listDetectedSigns = (ListView)findViewById(R.id.listView1);
 		listRelativeLayout = (RelativeLayout)findViewById(R.id.listViewLayout);
@@ -93,6 +101,19 @@ public class CameraActivity extends Activity implements CvCameraViewListener2{
 		mCameraView.setMaxFrameSize(640, 480);
 		mCameraView.enableFpsMeter();
 		listRelativeLayout.setVisibility(View.GONE);
+
+		//FUSED LOCATION
+		fusedInstance = FusedLocationSingleton.getInstance();
+		fusedInstance.startLocationUpdates();
+
+		//TENSORFLOW
+		tfPreviewListener = new TensorFlowImageListener();
+		tfPreviewListener.initialize(this.getAssets());
+
+		//SENSORS
+		SM = (SensorManager)getSystemService(SENSOR_SERVICE);
+		mySensor = SM.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		SM.registerListener(this, mySensor, SensorManager.SENSOR_DELAY_NORMAL);
 
 	}
 
@@ -102,10 +123,6 @@ public class CameraActivity extends Activity implements CvCameraViewListener2{
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.camera_preview);
 		Initialize();
-		fusedInstance = FusedLocationSingleton.getInstance();
-		fusedInstance.startLocationUpdates();
-		tfPreviewListener = new TensorFlowImageListener();
-		tfPreviewListener.initialize(this.getAssets());
 	}
 	@Override
     public void onResume() {
@@ -251,14 +268,14 @@ public class CameraActivity extends Activity implements CvCameraViewListener2{
 			if(typee == 1){
 				bt = Utilities.convertMatToBitmap(subMat);
 				Sign.myMap.put("Prohibition sign - Width "+width, bt);
-				Utilities.writeToFile("Prohibition sign - " + coordinates + "\n", getApplicationContext());
+				//Utilities.writeToFile("Prohibition sign - " + coordinates + "\n", getApplicationContext());
 				//signRecognized = tfPreviewListener.recognizeSign(bt);
 				//Utilities.storeImage(bt, counter++);
 			}
 			else if(typee == 2){
 				bt = Utilities.convertMatToBitmap(subMat);
 				Sign.myMap.put("Danger sign - Width "+width, bt);
-				Utilities.writeToFile("Danger sign - " + coordinates + "\n", getApplicationContext());
+				//Utilities.writeToFile("Danger sign - " + coordinates + "\n", getApplicationContext());
 				//signRecognized = tfPreviewListener.recognizeSign(bt);
 				//Utilities.storeImage(bt, counter++);
 			}
@@ -295,4 +312,14 @@ public class CameraActivity extends Activity implements CvCameraViewListener2{
         }
 	}
 
+
+
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+	}
+
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+	}
 }
