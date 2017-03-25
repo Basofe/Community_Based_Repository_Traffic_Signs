@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="play-services-tasks-10.0.1">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.android/build-cache/e8ee6f427a91c1b82ac5fe67915bb72c033b5fef/output/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.android/build-cache/e8ee6f427a91c1b82ac5fe67915bb72c033b5fef/output/res" />
+      <root url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/10.0.1/res" />
+      <root url="jar://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/10.0.1/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
