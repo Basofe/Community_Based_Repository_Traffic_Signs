@@ -85,11 +85,9 @@
       <sourceFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/openCVLibrary249/generated/source/apt/androidTest/debug" isTestSource="true" generated="true" />
       <sourceFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/openCVLibrary249/generated/res/rs/androidTest/debug" type="java-test-resource" />
       <sourceFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/openCVLibrary249/generated/res/resValues/androidTest/debug" type="java-test-resource" />
-      <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/openCVLibrary249/intermediates/assets" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/openCVLibrary249/intermediates/blame" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/openCVLibrary249/intermediates/bundles" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/openCVLibrary249/intermediates/classes" />
-      <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/openCVLibrary249/intermediates/dependency-cache" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/openCVLibrary249/intermediates/incremental" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/openCVLibrary249/intermediates/incremental-safeguard" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/openCVLibrary249/intermediates/jniLibs" />

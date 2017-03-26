@@ -11,12 +11,16 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.trafficsignsdetection.GeoLocation.Const;
 import com.example.trafficsignsdetection.GeoLocation.FusedLocationSingleton;
 import com.example.trafficsignsdetection.Sensors.BearingToNorthProvider;
+import com.example.trafficsignsdetection.Sensors.TurnGPSOn;
 
 import java.util.ArrayList;
 
@@ -29,8 +33,12 @@ public class SensorActivityTest extends Activity implements SensorEventListener,
     FusedLocationSingleton fusedInstance;
     private BearingToNorthProvider mBearingProvider;
 
+    TurnGPSOn gpsOn;
+
     TextView Az;
     TextView speedarinho;
+    Button toggleGPS;
+    Intent intent;
 
     String speed = "0 km/h";
 
@@ -45,10 +53,12 @@ public class SensorActivityTest extends Activity implements SensorEventListener,
         setContentView(R.layout.sensor_layout);
 
         fusedInstance = FusedLocationSingleton.getInstance();
+        gpsOn = new TurnGPSOn();
         fusedInstance.startLocationUpdates();
 
         Az = (TextView) findViewById(R.id.textAz);
         speedarinho = (TextView) findViewById(R.id.textVelocidade);
+        toggleGPS = (Button) findViewById(R.id.buttonGPS);
 
         SM = (SensorManager)getSystemService(SENSOR_SERVICE);
         accelerometer = SM.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -56,6 +66,18 @@ public class SensorActivityTest extends Activity implements SensorEventListener,
 
         mBearingProvider = new BearingToNorthProvider(this);
         mBearingProvider.setChangeEventListener(this);
+
+        toggleGPS.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+
+                intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+
+            }
+        });
     }
 
     private BroadcastReceiver mLocationUpdated = new BroadcastReceiver() {
