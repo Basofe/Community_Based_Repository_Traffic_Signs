@@ -175,5 +175,22 @@ public class Utilities {
 			Log.e("Exception", "File write failed: " + e.toString());
 		}
 	}
+
+	static int R_EARTH = 6378;
+
+	public static Double[] distanceToCoordinateAzimuth(double latitude, double longitude, double dy, double dx, double azimuth, int p){
+		Double[] coordinates = new Double[2];
+
+		double cx = dx;//(dx / R_EARTH) * (180 / Math.PI) / Math.cos(latitude * Math.PI/180);
+		double cy = dy;//(dy / R_EARTH) * (180 / Math.PI);
+
+		double new_longitude  = longitude  + p*cx*Math.cos(azimuth) - cy*Math.sin(azimuth);
+		double new_latitude = latitude + p*cx*Math.sin(azimuth) + cy*Math.cos(azimuth);
+
+		coordinates[0] = new_longitude;
+		coordinates[1] = new_latitude;
+
+		return coordinates;
+	}
 	
 }

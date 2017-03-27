@@ -22,8 +22,6 @@ import com.example.trafficsignsdetection.GeoLocation.FusedLocationSingleton;
 import com.example.trafficsignsdetection.Sensors.BearingToNorthProvider;
 import com.example.trafficsignsdetection.Sensors.TurnGPSOn;
 
-import java.util.ArrayList;
-
 /**
  * Created by helde on 21/03/2017.
  */
@@ -43,8 +41,9 @@ public class SensorActivityTest extends Activity implements SensorEventListener,
     String speed = "0 km/h";
 
     double azimuth = 0.0;
+    float[] orientationVals;
 
-    private Sensor accelerometer, magnetometer;
+    private Sensor accelerometer, magnetometer, rotationVector;
     private SensorManager SM;
 
 
@@ -60,24 +59,16 @@ public class SensorActivityTest extends Activity implements SensorEventListener,
         speedarinho = (TextView) findViewById(R.id.textVelocidade);
         toggleGPS = (Button) findViewById(R.id.buttonGPS);
 
+        orientationVals = new float[4];
+
         SM = (SensorManager)getSystemService(SENSOR_SERVICE);
         accelerometer = SM.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = SM.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        rotationVector = SM.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
 
         mBearingProvider = new BearingToNorthProvider(this);
         mBearingProvider.setChangeEventListener(this);
 
-        toggleGPS.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-
-                intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(intent);
-
-            }
-        });
     }
 
     private BroadcastReceiver mLocationUpdated = new BroadcastReceiver() {
@@ -107,6 +98,7 @@ public class SensorActivityTest extends Activity implements SensorEventListener,
 
         SM.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
         SM.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
+        SM.registerListener(this, rotationVector, SensorManager.SENSOR_DELAY_GAME);
 
         mBearingProvider.start();
         // start location updates
@@ -135,22 +127,28 @@ public class SensorActivityTest extends Activity implements SensorEventListener,
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-        /*if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-            mGravity = event.values;
-        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
-            mGeomagnetic = event.values;
-        if (mGravity != null && mGeomagnetic != null) {
-            float R[] = new float[9];
-            float I[] = new float[9];
-            boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
-            if (success) {
-                float orientation[] = new float[3];
-                SensorManager.getOrientation(R, orientation);
-                azimuth = orientation[0] * 360 / (2 * Math.PI); // orientation contains: azimut, pitch and roll
-            }
-        }
+        // It is good practice to check that we received the proper sensor event
+        if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+            // Convert the rotation-vector to a 4x4 matrix.
+            float[] mRotationMatrix = new float[16];
+            SensorManager.getRotationMatrixFromVector(mRotationMatrix,
+                    event.values);
 
-        speedarinho.setText(String.valueOf(Math.round(azimuth * 10.0) / 10.0));*/
+            SensorManager.remapCoordinateSystem(mRotationMatrix,
+                            SensorManager.AXIS_X, SensorManager.AXIS_Z,
+                            mRotationMatrix);
+
+            SensorManager.getOrientation(mRotationMatrix, orientationVals);
+
+            // Optionally convert the result from radians to degrees
+            orientationVals[0] = (float) Math.toDegrees(orientationVals[0]);
+            orientationVals[1] = (float) Math.toDegrees(orientationVals[1]);
+            orientationVals[2] = (float) Math.toDegrees(orientationVals[2]);
+
+            orientationVals[0] = Math.round(orientationVals[0] * 10.0 / 10.0);
+
+            Az.setText(String.valueOf(orientationVals[0]));
+        }
     }
 
     @Override
@@ -160,6 +158,6 @@ public class SensorActivityTest extends Activity implements SensorEventListener,
 
     @Override
     public void onBearingChanged(double bearing) {
-        Az.setText(String.valueOf(Math.round(bearing * 10.0) / 10.0));
+        //Az.setText(String.valueOf(Math.round(bearing * 10.0) / 10.0));
     }
 }
