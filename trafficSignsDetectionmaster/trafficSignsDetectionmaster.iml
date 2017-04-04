@@ -48,13 +48,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/shaders" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/res" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/resources" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/assets" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/aidl" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/rs" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/assets" type="java-test-resource" />
@@ -62,6 +55,13 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/shaders" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/assets" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/shaders" isTestSource="true" />
     </content>
     <content url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster">
       <sourceFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/generated/source/r/debug" isTestSource="false" generated="true" />
@@ -80,7 +80,6 @@
       <sourceFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/generated/res/resValues/androidTest/debug" type="java-test-resource" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/assets" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/blame" />
-      <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/builds" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/classes" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.0/jars" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/exploded-aar/com.android.support/support-v4/24.0.0/jars" />
@@ -89,21 +88,13 @@
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/exploded-aar/com.google.android.gms/play-services-location/10.0.1/jars" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/10.0.1/jars" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/incremental" />
-      <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/incremental-classes" />
-      <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/incremental-runtime-classes" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/incremental-safeguard" />
-      <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/incremental-verifier" />
-      <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/instant-run-resources" />
-      <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/instant-run-support" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/jniLibs" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/manifests" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/pre-dexed" />
-      <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/reload-dex" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/res" />
-      <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/restart-dex" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/rs" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/shaders" />
-      <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/split-apk" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/symbols" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/transforms" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/outputs" />

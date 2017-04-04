@@ -38,7 +38,7 @@ public class itemAdapter extends BaseAdapter{
 		ImageView iv = (ImageView)v.findViewById(R.id.list_image);
 		TextView tvTitle = (TextView)v.findViewById(R.id.list_item_title);
 		iv.setImageBitmap(Sign.myMap.get(item.getImage()));
-		tvTitle.setText(item.getImage());
+		tvTitle.setText(item.getName());
 		
 		return v;
 	}

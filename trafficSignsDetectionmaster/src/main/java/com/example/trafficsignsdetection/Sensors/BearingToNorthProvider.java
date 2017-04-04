@@ -99,7 +99,7 @@ public class BearingToNorthProvider implements SensorEventListener, LocationList
      * @param context Application Context
      */
     public BearingToNorthProvider(Context context) {
-        this(context, 10, 0.5, 50);
+        this(context, 5, 0.5, 50);
     }
 
     /**
@@ -137,8 +137,8 @@ public class BearingToNorthProvider implements SensorEventListener, LocationList
      * Call this method to start bearing updates.
      */
     public void start() {
-        mSensorManager.registerListener(this, mSensorAccelerometer, SensorManager.SENSOR_DELAY_UI);
-        mSensorManager.registerListener(this, mSensorMagneticField, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(this, mSensorAccelerometer, SensorManager.SENSOR_DELAY_GAME);
+        mSensorManager.registerListener(this, mSensorMagneticField, SensorManager.SENSOR_DELAY_GAME);
 
         for (final String provider : mLocationManager.getProviders(true)) {
             if (LocationManager.GPS_PROVIDER.equals(provider)

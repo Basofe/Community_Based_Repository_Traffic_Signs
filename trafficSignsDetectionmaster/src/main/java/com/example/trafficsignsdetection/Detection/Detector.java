@@ -27,7 +27,7 @@ public class Detector {
 	public void Detect(Mat mGray,MatOfRect signs, CascadeClassifier c){
 		//loadCascadeFile(type);
 		if (c != null) {
-            c.detectMultiScale(mGray, signs, 1.1, 3, 0, new Size(30,30), new Size(90,90));
+            c.detectMultiScale(mGray, signs, 1.1, 3, 0, new Size(30,30), new Size());
         }
 	}
 

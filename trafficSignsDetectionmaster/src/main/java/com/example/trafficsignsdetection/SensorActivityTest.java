@@ -75,7 +75,7 @@ public class SensorActivityTest extends Activity implements SensorEventListener,
         @Override
         public void onReceive(Context context, Intent intent) {
         try {
-            Location location = (Location) intent.getParcelableExtra(Const.LBM_EVENT_LOCATION_UPDATE);
+            /*Location location = (Location) intent.getParcelableExtra(Const.LBM_EVENT_LOCATION_UPDATE);
             double velocidade = 0.0;
 
             //Method getSpeed() gives the velocity in m/s. We need to multiple by 3600 and divide that by 1000 to convert it to km/h.
@@ -84,7 +84,7 @@ public class SensorActivityTest extends Activity implements SensorEventListener,
 
             speed = velocidade + " km/h";
 
-            speedarinho.setText(speed);
+            speedarinho.setText(speed);*/
 
         } catch (Exception e) {
             //
@@ -96,8 +96,8 @@ public class SensorActivityTest extends Activity implements SensorEventListener,
     public void onResume() {
         super.onResume();
 
-        SM.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
-        SM.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
+        SM.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
+        SM.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
         SM.registerListener(this, rotationVector, SensorManager.SENSOR_DELAY_GAME);
 
         mBearingProvider.start();
@@ -158,6 +158,6 @@ public class SensorActivityTest extends Activity implements SensorEventListener,
 
     @Override
     public void onBearingChanged(double bearing) {
-        //Az.setText(String.valueOf(Math.round(bearing * 10.0) / 10.0));
+        speedarinho.setText(String.valueOf(Math.round(bearing * 10.0) / 10.0));
     }
 }

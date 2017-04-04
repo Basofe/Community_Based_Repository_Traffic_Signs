@@ -9,6 +9,35 @@ Fim de limite de 80
 120
 Proibida ultrapassagem
 Proibida ultrapassagem de pesados
-Perigo de cruzamento
+Cruzamento com via sem prioridade
 Via com prioridade
 Cedencia de passagem
+Stop
+Transito proibido
+Transito proibido a automoveis de mercadorias
+Sentido proibido
+Outros perigos
+Curva a esquerda
+Curva a direita
+Curva a esquerda e contracurva
+Lomba ou depressao
+Pavimento escorregadio
+Passagem estreita
+Trabalhos na via
+Sinalização luminosa
+Travessia de peoes
+Criancas
+Bicicletas
+Neve ou gelo
+Animais selvagens
+Fim de todas as proibicoes
+Sentido obrigatorio a direita
+Sentido obrigatorio a esquerda
+Sentido obrigatorio em frente
+Sentidos obrigatorios em frente ou direita
+Sentidos obrigatorios em frente ou esquerda
+Obrigacao de contornar a placa a direita
+Obrigacao de contornar a placa a esquerda
+Rotunda
+Fim da proibicao de ultrapassar
+Fim da proibicao de ultrapassar pesados
