@@ -202,7 +202,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 		mRgba = inputFrame.rgba();
 		mGray = inputFrame.gray();
 
-		if(speed >= 5.0){
+		if(speed >= 0.0){
 			Imgproc.equalizeHist(mGray, mGray);
 			MatOfRect signs = new MatOfRect();
 			listSign = new ArrayList<Sign>();
@@ -268,7 +268,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 			//double y = facesArray[i].tl().y;
             final int width = facesArray[i].width;
 			final int typee = type;
-			int p = x > 320 ? -1:1;
+			int p = x >= 320 ? -1:1;
         	Mat subMat;
         	subMat = mRgba.submat(facesArray[i]);
 			if(typee == 1){
@@ -276,7 +276,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 				Sign.myMap.put("Prohibition sign - Width "+width, bt);
 				coords = utils.distanceToCoordinateAzimuth(lat, lon, 0.00005, 0.00005, azimuth, -1);
 				signRecognized = tfPreviewListener.recognizeSign(bt);
-				utils.writeToFile(signRecognized + " - " + coordinates + " | " + coords[1] + ", " + coords[0] + "\n", getApplicationContext());
+				//utils.writeToFile(signRecognized + " - " + coordinates + " | " + coords[1] + ", " + coords[0] + "\n", getApplicationContext());
 				//Utilities.storeImage(bt, counter++);
 			}
 			else if(typee == 2){
@@ -284,7 +284,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 				Sign.myMap.put("Danger sign - Width "+width, bt);
 				coords = utils.distanceToCoordinateAzimuth(lat, lon, 0.00005, 0.00005, azimuth, -1);
 				signRecognized = tfPreviewListener.recognizeSign(bt);
-				utils.writeToFile(signRecognized + " - " + coordinates + " | " + coords[1] + ", " + coords[0] + "\n", getApplicationContext());
+				//utils.writeToFile(signRecognized + " - " + coordinates + " | " + coords[1] + ", " + coords[0] + "\n", getApplicationContext());
 				//Utilities.storeImage(bt, counter++);
 			}
 			else if(typee == 3)

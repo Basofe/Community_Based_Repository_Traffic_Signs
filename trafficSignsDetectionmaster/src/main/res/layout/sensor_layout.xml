@@ -54,7 +54,7 @@
         android:layout_marginTop="30dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Azimuth" />
+        android:text="Azimuth - Rotation Vector" />
 
     <TextView
         android:id="@+id/textAz"
@@ -69,7 +69,7 @@
         android:layout_marginTop="30dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Velocidade" />
+        android:text="Azimuth - Accelerometer and Magnetometer" />
 
     <TextView
         android:id="@+id/textVelocidade"
