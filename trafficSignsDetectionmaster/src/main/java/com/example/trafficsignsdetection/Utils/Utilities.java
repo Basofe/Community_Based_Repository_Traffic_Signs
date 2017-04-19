@@ -5,11 +5,20 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.opencv.android.Utils;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
+import static org.opencv.core.Core.merge;
+import static org.opencv.core.Core.split;
+import static org.opencv.imgproc.Imgproc.INTER_AREA;
+import static org.opencv.imgproc.Imgproc.cvtColor;
+import static org.opencv.imgproc.Imgproc.equalizeHist;
+import static org.opencv.imgproc.Imgproc.resize;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -20,9 +29,6 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-
-import static org.opencv.imgproc.Imgproc.INTER_AREA;
-import static org.opencv.imgproc.Imgproc.resize;
 
 public class Utilities {
 
@@ -176,6 +182,30 @@ public class Utilities {
 		catch (IOException e) {
 			Log.e("Exception", "File write failed: " + e.toString());
 		}
+	}
+
+	public static Bitmap equalizeBitmap(Bitmap bitmap){
+		Mat img = new Mat(bitmap.getHeight(), bitmap.getHeight(), CvType.CV_8UC4);
+
+		Utils.bitmapToMat(bitmap, img); //converts bitmap to mat
+
+		Bitmap eqBitmap = null;
+		Mat eqImg = new Mat();
+		ArrayList<Mat> channels = new ArrayList<>();
+
+		cvtColor(img, eqImg, Imgproc.COLOR_BGR2YCrCb); //change the color image from BGR to YCrCb format
+
+		split(eqImg,channels); //split the image into channels
+
+		equalizeHist(channels.get(0), channels.get(0)); //equalize histogram on the 1st channel (Y)
+
+		merge(channels,eqImg); //merge 3 channels including the modified 1st channel into one image
+
+		cvtColor(eqImg, eqImg, Imgproc.COLOR_YCrCb2BGR); //change the color image from YCrCb to BGR format (to display image properly)
+
+		eqBitmap = convertMatToBitmap(eqImg); //converts mat to bitmap
+
+		return eqBitmap;
 	}
 
 	static int R_EARTH = 6378;

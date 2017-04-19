@@ -33,7 +33,7 @@ public class itemAdapter extends BaseAdapter{
 		if(view == null){
 			v = inflater.inflate(R.layout.list_item, null);
 		}
-		Sign item = new Sign();
+		Sign item;
 		item = listSign.get(position);
 		ImageView iv = (ImageView)v.findViewById(R.id.list_image);
 		TextView tvTitle = (TextView)v.findViewById(R.id.list_item_title);

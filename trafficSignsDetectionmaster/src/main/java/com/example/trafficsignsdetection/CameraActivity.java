@@ -36,8 +36,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
+import com.example.trafficsignsdetection.Communication.RetrofitMethods;
+import com.example.trafficsignsdetection.Communication.SignInfo;
 import com.example.trafficsignsdetection.Detection.Detector;
 import com.example.trafficsignsdetection.Detection.Sign;
 import com.example.trafficsignsdetection.Detection.itemAdapter;
@@ -51,7 +52,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 	FusedLocationSingleton fusedInstance;
 	private TensorFlowImageListener tfPreviewListener;
 	Utilities utils;
-	Location mLocation;
+	SignInfo signInfo;
 	String coordinates;
 	double lat = 0.0, lon = 0.0;
 	String signRecognized = "";
@@ -69,6 +70,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 	private CascadeClassifier cascadeClassifier3 = null;
 	private CascadeClassifier cascadeClassifier4 = null;
 	private ArrayList<Sign> listSign;
+	private RetrofitMethods retrofit;
 	private Detector detector;
 	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
 	        @Override
@@ -114,6 +116,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 
 		//UTILITIES
 		utils = new Utilities();
+		retrofit = new RetrofitMethods();
 	}
 
 	@Override
@@ -244,7 +247,6 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 		if(counter > 2){
 			counter = 0;
 		}
-
 		counter++;
 	}
 
@@ -275,7 +277,10 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 				bt = Utilities.convertMatToBitmap(subMat);
 				Sign.myMap.put("Prohibition sign - Width "+width, bt);
 				coords = utils.distanceToCoordinateAzimuth(lat, lon, 0.00005, 0.00005, azimuth, -1);
+				bt = Utilities.equalizeBitmap(bt);
 				signRecognized = tfPreviewListener.recognizeSign(bt);
+				signInfo = new SignInfo(signRecognized, String.valueOf(coords[1]), String.valueOf(coords[0]));
+				retrofit.uploadSignInfo(signInfo);
 				//utils.writeToFile(signRecognized + " - " + coordinates + " | " + coords[1] + ", " + coords[0] + "\n", getApplicationContext());
 				//Utilities.storeImage(bt, counter++);
 			}
@@ -283,7 +288,10 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 				bt = Utilities.convertMatToBitmap(subMat);
 				Sign.myMap.put("Danger sign - Width "+width, bt);
 				coords = utils.distanceToCoordinateAzimuth(lat, lon, 0.00005, 0.00005, azimuth, -1);
+				bt = Utilities.equalizeBitmap(bt);
 				signRecognized = tfPreviewListener.recognizeSign(bt);
+				signInfo = new SignInfo(signRecognized, String.valueOf(coords[1]), String.valueOf(coords[0]));
+				retrofit.uploadSignInfo(signInfo);
 				//utils.writeToFile(signRecognized + " - " + coordinates + " | " + coords[1] + ", " + coords[0] + "\n", getApplicationContext());
 				//Utilities.storeImage(bt, counter++);
 			}

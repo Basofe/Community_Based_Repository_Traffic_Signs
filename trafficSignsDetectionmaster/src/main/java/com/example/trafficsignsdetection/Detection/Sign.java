@@ -25,7 +25,7 @@ public class Sign implements Parcelable{
 	public void setImage(String image) {
 		this.image = image;
 	}
-	public Sign() {
+	public Sign(String signRecognized, String s, String valueOf) {
 		
 	}
 	public Sign(Parcel source) {
