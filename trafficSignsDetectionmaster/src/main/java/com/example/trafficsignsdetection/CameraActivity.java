@@ -55,12 +55,20 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 	SignInfo signInfo;
 	String coordinates;
 	double lat = 0.0, lon = 0.0;
+
 	String signRecognized = "";
+	String signEq = "";
+	String str = "";
+
 	float speed = 0.0f;
 	float[] orientationVals;
 	double[] coords;
 	float azimuth;
-	
+	float azAtual;
+
+	private Sensor rotationVector;
+	private SensorManager SM;
+
 	private static final Scalar    FACE_RECT_COLOR     = new Scalar(0, 255, 0, 255);
 	private CameraBridgeViewBase mCameraView;
 	private ListView listDetectedSigns;
@@ -93,7 +101,6 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 	private Mat mRgba;
 	private Mat mGray;
 	private int counter = 0;
-	private int counter2 = 1;
 
 		//detector = new Detector(CameraActivity.this);
 	private void Initialize(){
@@ -114,6 +121,10 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 		tfPreviewListener = new TensorFlowImageListener();
 		tfPreviewListener.initialize(this.getAssets());
 
+		//SENSORS
+		SM = (SensorManager)getSystemService(SENSOR_SERVICE);
+		rotationVector = SM.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+
 		//UTILITIES
 		utils = new Utilities();
 		retrofit = new RetrofitMethods();
@@ -124,6 +135,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 		super.onCreate(savedInstanceState);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.camera_preview);
+		orientationVals = new float[4];
 		Initialize();
 	}
 	@Override
@@ -142,11 +154,15 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 		// register observer for location updates
 		LocalBroadcastManager.getInstance(CameraActivity.this).registerReceiver(mLocationUpdated,
 				new IntentFilter(Const.INTENT_FILTER_LOCATION_UPDATE));
-    }
+
+		SM.registerListener(this, rotationVector, SensorManager.SENSOR_DELAY_GAME);
+	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
+
+		SM.unregisterListener(this);
 
 		// stop location updates
 		fusedInstance.stopLocationUpdates();
@@ -265,6 +281,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
         }
         for (int i = 0; i < len; i++){
 			Bitmap bt;
+			Bitmap eq;
         	final int ii = i;
 			final double x = facesArray[i].tl().x;
 			//double y = facesArray[i].tl().y;
@@ -274,26 +291,34 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
         	Mat subMat;
         	subMat = mRgba.submat(facesArray[i]);
 			if(typee == 1){
+				azAtual = azimuth;
 				bt = Utilities.convertMatToBitmap(subMat);
 				Sign.myMap.put("Prohibition sign - Width "+width, bt);
-				coords = utils.distanceToCoordinateAzimuth(lat, lon, 0.00005, 0.00005, azimuth, -1);
-				bt = Utilities.equalizeBitmap(bt);
+				coords = utils.distanceToCoordinateAzimuth(lat, lon, 0.00005, 0.00005, azAtual, -1);
+				eq = Utilities.equalizeBitmap(bt);
 				signRecognized = tfPreviewListener.recognizeSign(bt);
-				signInfo = new SignInfo(signRecognized, String.valueOf(coords[1]), String.valueOf(coords[0]));
-				retrofit.uploadSignInfo(signInfo);
-				//utils.writeToFile(signRecognized + " - " + coordinates + " | " + coords[1] + ", " + coords[0] + "\n", getApplicationContext());
-				//Utilities.storeImage(bt, counter++);
+				signEq = tfPreviewListener.recognizeSign(eq);
+				//signInfo = new SignInfo(signRecognized, String.valueOf(coords[1]), String.valueOf(coords[0]));
+				//retrofit.uploadSignInfo(signInfo);
+//				str = "Prohibition\n---------------------------------\nN - " + signRecognized + " || Eq - " + signEq;
+//				utils.writeToFile(str + " - " + coordinates + " | " + coords[1] + ", " + coords[0] + " - " + azAtual
+//						+ "\n---------------------------------\n", getApplicationContext());
+				//utils.storeImage(bt, counter++);
 			}
 			else if(typee == 2){
+				azAtual = azimuth;
 				bt = Utilities.convertMatToBitmap(subMat);
 				Sign.myMap.put("Danger sign - Width "+width, bt);
-				coords = utils.distanceToCoordinateAzimuth(lat, lon, 0.00005, 0.00005, azimuth, -1);
-				bt = Utilities.equalizeBitmap(bt);
+				coords = utils.distanceToCoordinateAzimuth(lat, lon, 0.00005, 0.00005, azAtual, -1);
+				eq = Utilities.equalizeBitmap(bt);
 				signRecognized = tfPreviewListener.recognizeSign(bt);
-				signInfo = new SignInfo(signRecognized, String.valueOf(coords[1]), String.valueOf(coords[0]));
-				retrofit.uploadSignInfo(signInfo);
-				//utils.writeToFile(signRecognized + " - " + coordinates + " | " + coords[1] + ", " + coords[0] + "\n", getApplicationContext());
-				//Utilities.storeImage(bt, counter++);
+				signEq = tfPreviewListener.recognizeSign(eq);
+				//signInfo = new SignInfo(signRecognized, String.valueOf(coords[1]), String.valueOf(coords[0]));
+				//retrofit.uploadSignInfo(signInfo);
+//				str = "Danger\n---------------------------------\nN - " + signRecognized + " || Eq - " + signEq;
+//				utils.writeToFile(str + " - " + coordinates + " | " + coords[1] + ", " + coords[0] + " - " + azAtual
+//						+ "\n---------------------------------\n", getApplicationContext());
+				//utils.storeImage(bt, counter++);
 			}
 			else if(typee == 3)
 				Sign.myMap.put("Stop sign - Width "+width, Utilities.convertMatToBitmap(subMat));
@@ -308,11 +333,13 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 				public void run() {
 					// TODO Auto-generated method stub
 					Sign sign;
-					if(typee == 1)
-						sign = new Sign(signRecognized, "Prohibition sign - Width "+width);
-                    else if(typee == 2)
-						sign = new Sign(signRecognized, "Danger sign - Width "+width);
-					else if(typee == 3)
+					if(typee == 1) {
+						str = "N - " + signRecognized + " || Eq - " + signEq;
+						sign = new Sign(str, "Prohibition sign - Width " + width);
+					} else if(typee == 2) {
+						str = "N - " + signRecognized + " || Eq - " + signEq;
+						sign = new Sign(str, "Danger sign - Width " + width);
+					} else if(typee == 3)
 						sign = new Sign("unknown", "Stop sign - Width "+width);
                     else
 						sign = new Sign("unknown", "Mandatory sign - Width "+width);
@@ -331,6 +358,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
+		// It is good practice to check that we received the proper sensor event
 		if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
 			// Convert the rotation-vector to a 4x4 matrix.
 			float[] mRotationMatrix = new float[16];
@@ -341,14 +369,8 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 					SensorManager.AXIS_X, SensorManager.AXIS_Z,
 					mRotationMatrix);
 
-			SensorManager.getOrientation(mRotationMatrix, orientationVals);
-
 			// Optionally convert the result from radians to degrees
-			orientationVals[0] = (float) Math.toDegrees(orientationVals[0]);
-			//orientationVals[1] = (float) Math.toDegrees(orientationVals[1]);
-			//orientationVals[2] = (float) Math.toDegrees(orientationVals[2]);
-
-			azimuth = Math.round(orientationVals[0] * 10.0 / 10.0);
+			azimuth = SensorManager.getOrientation( mRotationMatrix, orientationVals )[0];
 		}
 	}
 

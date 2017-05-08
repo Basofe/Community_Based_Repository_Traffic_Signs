@@ -14,6 +14,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import static org.opencv.core.Core.merge;
+import static org.opencv.core.Core.normalize;
 import static org.opencv.core.Core.split;
 import static org.opencv.imgproc.Imgproc.INTER_AREA;
 import static org.opencv.imgproc.Imgproc.cvtColor;
@@ -101,8 +102,8 @@ public class Utilities {
 
 
 
-	public static void storeImage(Bitmap image, int counter) {
-		File pictureFile = getOutputMediaFile2(counter);
+	public static void storeImage(Bitmap image, String name) {
+		File pictureFile = getOutputMediaFile2(name);
 		if (pictureFile == null) {
 			Log.d(TAG,
 					"Error creating media file, check storage permissions: ");// e.getMessage());
@@ -119,7 +120,7 @@ public class Utilities {
 		}
 	}
 
-	public static File getOutputMediaFile2(int counter) {
+	public static File getOutputMediaFile2(String name) {
 		// To be safe, you should check that the SDCard is mounted
 		// using Environment.getExternalStorageState() before doing this.
 		File mediaStorageDir = new File(Environment.getExternalStorageDirectory()
@@ -138,7 +139,7 @@ public class Utilities {
 		}
 		// Create a media file name
 		File mediaFile;
-		String mImageName = "MI_" + counter + ".jpg";
+		String mImageName = "MI_" + name + ".jpg";
 
 		mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
 		return mediaFile;
@@ -219,8 +220,8 @@ public class Utilities {
 		double new_longitude  = longitude  + p*cx*Math.cos(azimuth) - cy*Math.sin(azimuth);
 		double new_latitude = latitude + p*cx*Math.sin(azimuth) + cy*Math.cos(azimuth);
 
-		coordinates[0] = new_longitude;
-		coordinates[1] = new_latitude;
+		coordinates[0] = Math.round(new_longitude*10000000.0)/10000000.0;
+		coordinates[1] = Math.round(new_latitude*10000000.0)/10000000.0;
 
 		return coordinates;
 	}

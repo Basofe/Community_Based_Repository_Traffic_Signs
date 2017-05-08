@@ -138,16 +138,11 @@ public class SensorActivityTest extends Activity implements SensorEventListener,
                             SensorManager.AXIS_X, SensorManager.AXIS_Z,
                             mRotationMatrix);
 
-            SensorManager.getOrientation(mRotationMatrix, orientationVals);
+            orientationVals[0] = SensorManager.getOrientation( mRotationMatrix, orientationVals )[0];
 
-            // Optionally convert the result from radians to degrees
-            orientationVals[0] = (float) Math.toDegrees(orientationVals[0]);
-            orientationVals[1] = (float) Math.toDegrees(orientationVals[1]);
-            orientationVals[2] = (float) Math.toDegrees(orientationVals[2]);
+            azimuth = (int) ( Math.toDegrees( SensorManager.getOrientation( mRotationMatrix, orientationVals )[0] ) + 360 ) % 360;
 
-            orientationVals[0] = Math.round(orientationVals[0] * 10.0 / 10.0);
-
-            Az.setText(String.valueOf(orientationVals[0]));
+            Az.setText(String.valueOf(orientationVals[0]) + " - " + String.valueOf(azimuth));
         }
     }
 
