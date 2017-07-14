@@ -43,7 +43,7 @@ public class TensorFlowImageListener {
     private static final String INPUT_NAME = "inp/X:0";
     private static final String OUTPUT_NAME = "out/Softmax:0";
 
-    private static final String MODEL_FILE = "file:///android_asset/output_graph.pb";
+    private static final String MODEL_FILE = "file:///android_asset/output_graph_150epochs.pb";
     private static final String LABEL_FILE = "file:///android_asset/labels_sinais.txt";
 
 
@@ -61,7 +61,7 @@ public class TensorFlowImageListener {
 
         LOGGER.v("%d results", results.size());
         for (final Classifier.Recognition result : results) {
-            LOGGER.v("Result: " + result.getTitle());
+            //LOGGER.v("Result: " + result.getTitle());
             res = result.getTitle();
         }
 

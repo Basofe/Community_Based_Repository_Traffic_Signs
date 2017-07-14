@@ -11,8 +11,11 @@ import java.util.Date;
 import org.opencv.android.Utils;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+
+import static org.opencv.core.Core.mean;
 import static org.opencv.core.Core.merge;
 import static org.opencv.core.Core.normalize;
 import static org.opencv.core.Core.split;
@@ -29,7 +32,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
+//import android.util.Log;
 
 public class Utilities {
 
@@ -79,7 +82,7 @@ public class Utilities {
 	    // Create the storage directory if it does not exist
 	    if (! mediaStorageDir.exists()){
 	        if (! mediaStorageDir.mkdirs()){
-	            Log.d("MyCameraApp", "failed to create directory");
+	            //Log.d("MyCameraApp", "failed to create directory");
 	            return null;
 	        }
 	    }
@@ -105,8 +108,7 @@ public class Utilities {
 	public static void storeImage(Bitmap image, String name) {
 		File pictureFile = getOutputMediaFile2(name);
 		if (pictureFile == null) {
-			Log.d(TAG,
-					"Error creating media file, check storage permissions: ");// e.getMessage());
+			//Log.d(TAG,"Error creating media file, check storage permissions: ");// e.getMessage());
 			return;
 		}
 		try {
@@ -114,9 +116,9 @@ public class Utilities {
 			image.compress(Bitmap.CompressFormat.PNG, 100, fos);
 			fos.close();
 		} catch (FileNotFoundException e) {
-			Log.d(TAG, "File not found: " + e.getMessage());
+			//Log.d(TAG, "File not found: " + e.getMessage());
 		} catch (IOException e) {
-			Log.d(TAG, "Error accessing file: " + e.getMessage());
+			//Log.d(TAG, "Error accessing file: " + e.getMessage());
 		}
 	}
 
@@ -181,8 +183,20 @@ public class Utilities {
 			}
 		}
 		catch (IOException e) {
-			Log.e("Exception", "File write failed: " + e.toString());
+			//Log.e("Exception", "File write failed: " + e.toString());
 		}
+	}
+
+	public static int averageImageIntensity(Bitmap bitmap) {
+		double averageIntensity = 0;
+
+		Mat mat = new Mat();
+		Utils.bitmapToMat(bitmap, mat);
+
+		Scalar tempVal = mean(mat);
+		averageIntensity = (tempVal.val[0] + tempVal.val[1] + tempVal.val[2]) / 3;
+
+		return (int) averageIntensity;
 	}
 
 	public static Bitmap equalizeBitmap(Bitmap bitmap){
@@ -211,13 +225,10 @@ public class Utilities {
 
 	static int R_EARTH = 6378;
 
-	public static double[] distanceToCoordinateAzimuth(double latitude, double longitude, double dy, double dx, double azimuth, int p){
+	public static double[] distanceToCoordinateAzimuth(double latitude, double longitude, double cy, double cx, double azimuth, int p){
 		double[] coordinates = new double[2];
 
-		double cx = dx;//(dx / R_EARTH) * (180 / Math.PI) / Math.cos(latitude * Math.PI/180);
-		double cy = dy;//(dy / R_EARTH) * (180 / Math.PI);
-
-		double new_longitude  = longitude  + p*cx*Math.cos(azimuth) - cy*Math.sin(azimuth);
+		double new_longitude  = longitude  + ((p*cx*Math.cos(azimuth) - cy*Math.sin(azimuth)) / Math.cos(latitude));
 		double new_latitude = latitude + p*cx*Math.sin(azimuth) + cy*Math.cos(azimuth);
 
 		coordinates[0] = Math.round(new_longitude*10000000.0)/10000000.0;
@@ -225,5 +236,51 @@ public class Utilities {
 
 		return coordinates;
 	}
-	
+
+	public static double calculateShift(int pixelWidth){
+		//Latitude: 1 deg = 110.574 km
+		//Longitude: 1 deg = 111.320*cos(latitude) km
+
+		double distance = 0.0;
+		double angle = 0.0;
+		double latitudeShiftInDegrees = 0.0;
+		double focalLenght = 521;
+		double realLenght = 0.7;
+
+		distance = (realLenght * focalLenght) / pixelWidth;
+
+		angle = Math.atan(5.527/distance);
+
+		distance = distance/Math.cos(angle);
+
+		latitudeShiftInDegrees = distance / 111320;
+
+		latitudeShiftInDegrees = Math.round(latitudeShiftInDegrees*10000000.0)/10000000.0;
+
+		return latitudeShiftInDegrees;
+	}
+
+	public static String overspeed(String signRecognized, float speedLimit, float speed ){
+
+		String str = "";
+
+		if(signRecognized.equals("20\r") || signRecognized.equals("30\r")
+				|| signRecognized.equals("50\r") || signRecognized.equals("60\r")
+				|| signRecognized.equals("70\r") || signRecognized.equals("80\r")
+				|| signRecognized.equals("100\r") || signRecognized.equals("120\r")){
+			speedLimit = Float.parseFloat(signRecognized);
+			if(speed > speedLimit){
+				str = "Speed limit exceeded! Please slow down!";
+			}
+			else {
+				str = "Below speed limit";
+			}
+		}
+		else{
+			str = "";
+		}
+
+		return str;
+	}
+
 }

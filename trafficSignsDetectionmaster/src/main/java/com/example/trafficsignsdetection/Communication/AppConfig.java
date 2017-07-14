@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AppConfig {
 
-    private static String BASE_URL = "https://traffic-signs-repository.herokuapp.com/";
+    private static String BASE_URL = "https://tropadelei.tk";
 
     @NonNull
     static Retrofit getRetrofit() {

@@ -27,7 +27,7 @@ public class Detector {
 	public void Detect(Mat mGray,MatOfRect signs, CascadeClassifier c){
 		//loadCascadeFile(type);
 		if (c != null) {
-            c.detectMultiScale(mGray, signs, 1.1, 3, 0, new Size(30,30), new Size());
+            c.detectMultiScale(mGray, signs, 1.2, 3, 0, new Size(32,32), new Size());
         }
 	}
 
@@ -54,13 +54,13 @@ public class Detector {
 				case 3:
 					is = activity.getResources().openRawResource(R.raw.stopsigndetector2);
 
-					cascadeFile = new File(cascadeDir, "stopsigndetector2.xml");
+					cascadeFile = new File(cascadeDir, "yieldcascade20.xml");
 					break;
 
 				case 4:
 					is = activity.getResources().openRawResource(R.raw.mandatory);
 
-					cascadeFile = new File(cascadeDir, "mandatory.xml");
+					cascadeFile = new File(cascadeDir, "mandatorycascade20.xml");
 					break;
 			}
 			

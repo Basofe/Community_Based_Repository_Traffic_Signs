@@ -18,7 +18,6 @@ package com.example.trafficsignsdetection.Classification;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.os.Trace;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +55,7 @@ public class TensorFlowClassifier implements Classifier {
     Trace.beginSection("Recognize");
     final ArrayList<Recognition> recognitions = new ArrayList<Recognition>();
     for (final String result : classifyImageBmp(bitmap).split("\n")) {
-      Log.i(TAG, "Parsing [" + result + "]");
+      //Log.i(TAG, "Parsing [" + result + "]");
 
       // Clean up the string as needed
       final StringTokenizer st = new StringTokenizer(result);

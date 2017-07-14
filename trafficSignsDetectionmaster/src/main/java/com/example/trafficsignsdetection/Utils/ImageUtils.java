@@ -26,7 +26,7 @@ import java.io.FileOutputStream;
  **/
 public class ImageUtils {
   @SuppressWarnings("unused")
-  private static final Logger LOGGER = new Logger();
+  //private static final Logger LOGGER = new Logger();
 
   /**
    * Utility method to compute the allocated size in bytes of a YUV420SP image
@@ -51,11 +51,11 @@ public class ImageUtils {
   public static void saveBitmap(final Bitmap bitmap) {
     final String root =
         Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "tensorflow";
-    LOGGER.i("Saving %dx%d bitmap to %s.", bitmap.getWidth(), bitmap.getHeight(), root);
+    //LOGGER.i("Saving %dx%d bitmap to %s.", bitmap.getWidth(), bitmap.getHeight(), root);
     final File myDir = new File(root);
 
     if (!myDir.mkdirs()) {
-      LOGGER.i("Make dir failed");
+      //LOGGER.i("Make dir failed");
     }
 
     final String fname = "preview.png";
@@ -69,7 +69,7 @@ public class ImageUtils {
       out.flush();
       out.close();
     } catch (final Exception e) {
-      LOGGER.e(e, "Exception!");
+      //LOGGER.e(e, "Exception!");
     }
   }
 

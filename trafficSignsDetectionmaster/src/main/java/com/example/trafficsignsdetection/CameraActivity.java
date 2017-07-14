@@ -1,6 +1,8 @@
 package com.example.trafficsignsdetection;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -29,13 +31,15 @@ import android.location.Location;
 import android.os.Bundle;
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.example.trafficsignsdetection.Communication.RetrofitMethods;
 import com.example.trafficsignsdetection.Communication.SignInfo;
@@ -46,6 +50,11 @@ import com.example.trafficsignsdetection.Classification.TensorFlowImageListener;
 import com.example.trafficsignsdetection.GeoLocation.Const;
 import com.example.trafficsignsdetection.GeoLocation.FusedLocationSingleton;
 import com.example.trafficsignsdetection.Utils.Utilities;
+
+import static com.example.trafficsignsdetection.Utils.Utilities.averageImageIntensity;
+import static com.example.trafficsignsdetection.Utils.Utilities.calculateShift;
+import static com.example.trafficsignsdetection.Utils.Utilities.equalizeBitmap;
+import static com.example.trafficsignsdetection.Utils.Utilities.overspeed;
 
 public class CameraActivity extends Activity implements CvCameraViewListener2, SensorEventListener{
 
@@ -59,8 +68,11 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 	String signRecognized = "";
 	String signEq = "";
 	String str = "";
+	String str2 = "";
+	int averageIntensity = 0;
 
 	float speed = 0.0f;
+	float speedLimit = 120.0f;
 	float[] orientationVals;
 	double[] coords;
 	float azimuth;
@@ -89,8 +101,8 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 	                	detector = new Detector(CameraActivity.this);
 						cascadeClassifier = detector.loadCascadeFile(1);
 						cascadeClassifier2 = detector.loadCascadeFile(2);
-						//cascadeClassifier3 = detector.loadCascadeFile(3);
-						//cascadeClassifier4 = detector.loadCascadeFile(4);
+						cascadeClassifier3 = detector.loadCascadeFile(3);
+						cascadeClassifier4 = detector.loadCascadeFile(4);
 	                    break;
 	                default:
 	                    super.onManagerConnected(status);
@@ -100,7 +112,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 	    };
 	private Mat mRgba;
 	private Mat mGray;
-	private int counter = 0;
+	private int counter = 1;
 
 		//detector = new Detector(CameraActivity.this);
 	private void Initialize(){
@@ -142,10 +154,10 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
     public void onResume() {
         super.onResume();
 		if (!OpenCVLoader.initDebug()) {
-			Log.d("OLE", "Internal OpenCV library not found. Using OpenCV Manager for initialization");
+			//Log.d("OLE", "Internal OpenCV library not found. Using OpenCV Manager for initialization");
 			OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_9, this, mLoaderCallback);
 		} else {
-			Log.d("OLE", "OpenCV library found inside package. Using it!");
+			//Log.d("OLE", "OpenCV library found inside package. Using it!");
 			mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
 		}
 
@@ -194,7 +206,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 			}
 		}
 	};
-		
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -217,114 +229,232 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 	@Override
 	public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
 		//TODO Auto-generated method stub
+		final MatOfRect signs = new MatOfRect();
 
 		mRgba = inputFrame.rgba();
 		mGray = inputFrame.gray();
 
+		Thread prohibitionThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				detector.Detect(mGray, signs, cascadeClassifier);
+				Rect[] prohibitionArray = signs.toArray();
+				Draw(prohibitionArray, 1);
+			}
+		});
+
+		Thread dangerThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				detector.Detect(mGray, signs, cascadeClassifier2);
+				Rect[] dangerArray = signs.toArray();
+				Draw(dangerArray, 2);
+			}
+		});
+
+		Thread stopThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				detector.Detect(mGray, signs, cascadeClassifier3);
+				Rect[] stopArray = signs.toArray();
+				Draw(stopArray, 3);
+			}
+		});
+
+		Thread mandatoryThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				detector.Detect(mGray, signs, cascadeClassifier4);
+				Rect[] mandatoryArray = signs.toArray();
+				Draw(mandatoryArray, 4);
+			}
+		});
+
 		if(speed >= 0.0){
 			Imgproc.equalizeHist(mGray, mGray);
-			MatOfRect signs = new MatOfRect();
 			listSign = new ArrayList<Sign>();
+
+//			dangerThread.start();
+//			prohibitionThread.start();
+//			stopThread.start();
+//			mandatoryThread.start();
 
 			switch(counter){
 
 				case 1:
-					detector.Detect(mGray, signs, cascadeClassifier);
-					Rect[] prohibitionArray = signs.toArray();
-					Draw(prohibitionArray, 1);
+//					dangerThread.start();
+					prohibitionThread.start();
 					break;
 
 				case 2:
-					detector.Detect(mGray, signs, cascadeClassifier2);
-					Rect[] dangerArray = signs.toArray();
-					Draw(dangerArray,2);
+//					stopThread.start();
+					mandatoryThread.start();
 					break;
-
-				case 3:
-					/*detector.Detect(mGray, signs, cascadeClassifier3);
-					Rect[] stopArray = signs.toArray();
-					Draw(stopArray,3);
-					break;*/
-
-				case 4:
-					/*detector.Detect(mGray, signs, cascadeClassifier4);
-					Rect[] mandatoryArray = signs.toArray();
-					Draw(mandatoryArray,4);
-					break;*/
 			}
 
 			counterAdder();
+
+			try {
+//				dangerThread.join();
+				prohibitionThread.join();
+				mandatoryThread.join();
+//				stopThread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
+		}
+
         //Core.rectangle(inputFrame, facesArray[i].tl(), facesArray[i].br(), new Scalar(0, 255, 0, 255), 3);*/
         return mRgba;
 	}
 
 	private void counterAdder(){
-		if(counter > 2){
+		if(counter >= 2){
 			counter = 0;
 		}
 		counter++;
 	}
 
-	public void Draw(Rect[] facesArray, int type){
-		int len = facesArray.length;
-		if(len<=0){
-        	runOnUiThread(new Runnable() {
-				
+	/*public void Draw(Rect[] facesArray){
+		if(facesArray.length<=0){
+			runOnUiThread(new Runnable() {
+
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
 					listRelativeLayout.setVisibility(View.GONE);
 				}
 			});
-        	
-        }
-        for (int i = 0; i < len; i++){
+
+		}
+		for (int i = 0; i <facesArray.length; i++){
 			Bitmap bt;
 			Bitmap eq;
-        	final int ii = i;
+			final int ii = i;
+			double cx = 0.0;
 			final double x = facesArray[i].tl().x;
 			//double y = facesArray[i].tl().y;
+			final int width = facesArray[i].width;
+			int p = x >= 320 ? -1:1;
+
+			Mat subMat;
+			subMat = mRgba.submat(facesArray[i]);
+			bt = Utilities.convertMatToBitmap(subMat);
+			Sign.myMap.put("image"+i, bt);
+			eq = equalizeBitmap(bt);
+			//signRecognized = tfPreviewListener.recognizeSign(bt);
+			signEq = tfPreviewListener.recognizeSign(eq);
+			azAtual = (float) (azimuth - 1.57);
+			cx = calculateShift(width);
+			coords = utils.distanceToCoordinateAzimuth(lat, lon, cx, 0.00005, azAtual, -1);
+
+			Core.rectangle(mRgba,facesArray[i].tl(), facesArray[i].br(), FACE_RECT_COLOR, 2);
+
+			runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					str = "Eq - " + signEq;
+					Sign sign = new Sign(str, "image"+ii);
+					listSign.add(sign);
+					listRelativeLayout.setVisibility(View.VISIBLE);
+					itemAdapter adapter= new itemAdapter(listSign, CameraActivity.this);
+					adapter.notifyDataSetChanged();
+					listDetectedSigns.setAdapter(adapter);
+				}
+			});
+
+		}
+	}*/
+
+	public void recognizeAndGeoreference(int type, Mat subMat, int width){
+        Bitmap bt = Utilities.convertMatToBitmap(subMat);
+        Bitmap eq;
+        double cy;
+        String signType = "";
+        if(type == 1){
+            signType = "Prohibition";
+        } else if (type == 2){
+            signType = "Danger";
+        } else if (type == 3){
+            signType = "Stop";
+        } else if (type == 4){
+            signType = "Mandatory";
+        }
+        Sign.myMap.put(signType + " sign - Width "+width, bt);
+		averageIntensity = averageImageIntensity(bt);
+		if(averageIntensity < 50 || averageIntensity > 210){
+			eq = equalizeBitmap(bt);
+			signEq = tfPreviewListener.recognizeSign(eq);
+		}
+		signRecognized = tfPreviewListener.recognizeSign(bt);
+		azAtual = (float) (azimuth - 0.6);
+		cy = calculateShift(width);
+		coords = utils.distanceToCoordinateAzimuth(lat, lon, cy, 0.00005, azAtual, -1);
+	}
+
+	public void Draw(Rect[] facesArray, int type){
+		int len = facesArray.length;
+		if(len<=0){
+        	runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					listRelativeLayout.setVisibility(View.GONE);
+					// TODO Auto-generated method stub
+//					new CountDownTimer(5000,1000){
+//						@Override
+//						public void onTick(long millisUntilFinished){}
+//
+//						@Override
+//						public void onFinish(){
+//							set the new Content of your activity
+//							listRelativeLayout.setVisibility(View.GONE);
+//						}
+//					}.start();
+				}
+			});
+        }
+
+
+        for (int i = 0; i < len; i++){
+        	final int ii = i;
             final int width = facesArray[i].width;
 			final int typee = type;
+			final double x = facesArray[i].tl().x;
 			int p = x >= 320 ? -1:1;
         	Mat subMat;
         	subMat = mRgba.submat(facesArray[i]);
 			if(typee == 1){
-				azAtual = azimuth;
-				bt = Utilities.convertMatToBitmap(subMat);
-				Sign.myMap.put("Prohibition sign - Width "+width, bt);
-				coords = utils.distanceToCoordinateAzimuth(lat, lon, 0.00005, 0.00005, azAtual, -1);
-				eq = Utilities.equalizeBitmap(bt);
-				signRecognized = tfPreviewListener.recognizeSign(bt);
-				signEq = tfPreviewListener.recognizeSign(eq);
+				recognizeAndGeoreference(typee, subMat,width);
+				str2 = overspeed(signRecognized, speedLimit, speed);
 				//signInfo = new SignInfo(signRecognized, String.valueOf(coords[1]), String.valueOf(coords[0]));
 				//retrofit.uploadSignInfo(signInfo);
 //				str = "Prohibition\n---------------------------------\nN - " + signRecognized + " || Eq - " + signEq;
 //				utils.writeToFile(str + " - " + coordinates + " | " + coords[1] + ", " + coords[0] + " - " + azAtual
-//						+ "\n---------------------------------\n", getApplicationContext());
-				//utils.storeImage(bt, counter++);
+//						+ " - " + width + "\n---------------------------------\n", getApplicationContext());
 			}
 			else if(typee == 2){
-				azAtual = azimuth;
-				bt = Utilities.convertMatToBitmap(subMat);
-				Sign.myMap.put("Danger sign - Width "+width, bt);
-				coords = utils.distanceToCoordinateAzimuth(lat, lon, 0.00005, 0.00005, azAtual, -1);
-				eq = Utilities.equalizeBitmap(bt);
-				signRecognized = tfPreviewListener.recognizeSign(bt);
-				signEq = tfPreviewListener.recognizeSign(eq);
+                recognizeAndGeoreference(typee,subMat,width);
 				//signInfo = new SignInfo(signRecognized, String.valueOf(coords[1]), String.valueOf(coords[0]));
 				//retrofit.uploadSignInfo(signInfo);
 //				str = "Danger\n---------------------------------\nN - " + signRecognized + " || Eq - " + signEq;
 //				utils.writeToFile(str + " - " + coordinates + " | " + coords[1] + ", " + coords[0] + " - " + azAtual
-//						+ "\n---------------------------------\n", getApplicationContext());
-				//utils.storeImage(bt, counter++);
+//						+ " - " + width + "\n---------------------------------\n", getApplicationContext());
 			}
-			else if(typee == 3)
-				Sign.myMap.put("Stop sign - Width "+width, Utilities.convertMatToBitmap(subMat));
-            else
-				Sign.myMap.put("Mandatory sign - Width "+width, Utilities.convertMatToBitmap(subMat));
-
+			else if(typee == 3){
+                recognizeAndGeoreference(typee,subMat,width);
+//				str = "Stop\n---------------------------------\nN - " + signRecognized + " || Eq - " + signEq;
+//				utils.writeToFile(str + " - " + coordinates + " | " + coords[1] + ", " + coords[0] + " - " + azAtual
+//						+ " - " + width + "\n---------------------------------\n", getApplicationContext());
+			}
+            else {
+                recognizeAndGeoreference(typee,subMat,width);
+//				str = "Mandatory\n---------------------------------\nN - " + signRecognized + " || Eq - " + signEq;
+//				utils.writeToFile(str + " - " + coordinates + " | " + coords[1] + ", " + coords[0] + " - " + azAtual
+//						+ " - " + width + "\n---------------------------------\n", getApplicationContext());
+            }
         	Core.rectangle(mRgba,facesArray[i].tl(), facesArray[i].br(), FACE_RECT_COLOR, 2);
         	
         	runOnUiThread(new Runnable() {
@@ -334,15 +464,20 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 					// TODO Auto-generated method stub
 					Sign sign;
 					if(typee == 1) {
-						str = "N - " + signRecognized + " || Eq - " + signEq;
-						sign = new Sign(str, "Prohibition sign - Width " + width);
+						str = "N - " + signRecognized + " || Eq - " + signEq + " || Intensity - " + averageIntensity;
+						sign = new Sign(str + "\n" + str2, "Prohibition sign - Width " + width);
 					} else if(typee == 2) {
-						str = "N - " + signRecognized + " || Eq - " + signEq;
+						str = "N - " + signRecognized + " || Eq - " + signEq + " || Intensity - " + averageIntensity;
 						sign = new Sign(str, "Danger sign - Width " + width);
-					} else if(typee == 3)
-						sign = new Sign("unknown", "Stop sign - Width "+width);
-                    else
-						sign = new Sign("unknown", "Mandatory sign - Width "+width);
+					} else if(typee == 3){
+						str = "N - " + signRecognized + " || Eq - " + signEq + " || Intensity - " + averageIntensity;
+						sign = new Sign(str, "Stop sign - Width "+width);
+					}
+                    else{
+						str = "N - " + signRecognized + " || Eq - " + signEq + " || Intensity - " + averageIntensity;
+						sign = new Sign(str, "Mandatory sign - Width "+width);
+                    }
+					
 		        	listSign.add(sign);
 					listRelativeLayout.setVisibility(View.VISIBLE);
 					itemAdapter adapter= new itemAdapter(listSign, CameraActivity.this);

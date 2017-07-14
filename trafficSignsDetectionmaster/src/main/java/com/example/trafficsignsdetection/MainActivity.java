@@ -13,6 +13,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private Button btRuntime;
 	private Button btPickPhoto;
 	private Button btTakePhoto;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,9 +48,9 @@ public class MainActivity extends Activity implements OnClickListener {
 			startActivity(sensorsTest);
 			return;
 		case R.id.btPickPhoto:
-			/*Intent pickPhotoIntent = new Intent(MainActivity.this, PhotoActivity.class);
-			startActivity(pickPhotoIntent);
-			break;*/
+			Intent databaseIntent = new Intent(MainActivity.this, FocalLenghtActivity.class);
+			startActivity(databaseIntent);
+			break;
 		default:
 			break;
 		}

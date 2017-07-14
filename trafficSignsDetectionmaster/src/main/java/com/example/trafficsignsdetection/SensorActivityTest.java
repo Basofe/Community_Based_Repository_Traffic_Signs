@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.hardware.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -13,6 +14,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Size;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -40,8 +42,14 @@ public class SensorActivityTest extends Activity implements SensorEventListener,
 
     String speed = "0 km/h";
 
+    Camera mcamera;
+    Camera.Parameters params;
+
     double azimuth = 0.0;
     float[] orientationVals;
+    double focal_length_pix;
+    Camera.Size previewSize;
+    double horizontalAngleView;
 
     private Sensor accelerometer, magnetometer, rotationVector;
     private SensorManager SM;
@@ -69,6 +77,11 @@ public class SensorActivityTest extends Activity implements SensorEventListener,
         mBearingProvider = new BearingToNorthProvider(this);
         mBearingProvider.setChangeEventListener(this);
 
+        mcamera = Camera.open();
+
+        previewSize = mcamera.getParameters().getPreviewSize();
+        horizontalAngleView = mcamera.getParameters().getHorizontalViewAngle();
+        focal_length_pix = (640 * 0.5) / Math.tan(horizontalAngleView * 0.5 * Math.PI/180);
     }
 
     private BroadcastReceiver mLocationUpdated = new BroadcastReceiver() {
@@ -153,6 +166,7 @@ public class SensorActivityTest extends Activity implements SensorEventListener,
 
     @Override
     public void onBearingChanged(double bearing) {
-        speedarinho.setText(String.valueOf(Math.round(bearing * 10.0) / 10.0));
+        //speedarinho.setText(String.valueOf(Math.round(bearing * 10.0) / 10.0));
+        speedarinho.setText(String.valueOf(focal_length_pix));
     }
 }

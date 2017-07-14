@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/search_icon"
-        android:text="Pick Photo" />
+        android:text="Test Database" />
 
     <Button
         android:id="@+id/btTakePhoto"
