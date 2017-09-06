@@ -13,25 +13,27 @@ public class DBModel extends SQLiteOpenHelper {
     private static final String TABLE = "signs";
     private static final String ID = "_id";
     private static final String ORIENTATION = "orientation";
-    private static final String SIGNNAME = "name";
+    private static final String SIGNNAME = "signName";
     private static final String LATITUDE = "latitude";
     private static final String LONGITUDE = "longitude";
+    private static final String TYPE = "type";
     private static final int VERSION = 1;
 
     public DBModel(Context context){
         super(context, DATABASE_NAME, null, VERSION);
-    }
+        }
 
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         String sql = "CREATE TABLE " + TABLE + " ( "
                 + getID() + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + getSIGNNAME() + " VARCHAR2(80),"
-                + getORIENTATION() + "VARCHAR2(20)"
-                + getLATITUDE() + " VARCHAR2(30),"
-                + getLONGITUDE() + " VARCHAR2(30)"
-                +" )";
+                + getSIGNNAME() + " VARCHAR2(45),"
+                + getORIENTATION() + " VARCHAR2(10),"
+                + getLATITUDE() + " VARCHAR2(15),"
+                + getLONGITUDE() + " VARCHAR2(15),"
+                + getTYPE() + " VARCHAR2(20)"
+                +" ); ";
         db.execSQL(sql);
     }
 
@@ -62,5 +64,7 @@ public class DBModel extends SQLiteOpenHelper {
     public static String getLONGITUDE() {
         return LONGITUDE;
     }
+
+    public static String getTYPE() { return  TYPE; }
 
 }

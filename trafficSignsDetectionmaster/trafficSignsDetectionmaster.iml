@@ -81,7 +81,6 @@
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/assets" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/blame" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/classes" />
-      <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.0/jars" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/exploded-aar/com.android.support/support-v4/24.0.0/jars" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/exploded-aar/com.google.android.gms/play-services-base/10.0.1/jars" />
       <excludeFolder url="file://C:/tmp/Community_Based_Repository_Traffic_Signs/trafficSignsDetectionmaster/intermediates/exploded-aar/com.google.android.gms/play-services-basement/10.0.1/jars" />
@@ -102,7 +101,15 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 23 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="kryo-4.0.0" level="project" />
+    <orderEntry type="library" exported="" name="metrics-core-3.1.2" level="project" />
+    <orderEntry type="library" exported="" name="LatencyUtils-2.0.3" level="project" />
+    <orderEntry type="library" exported="" name="kryo-serializers-0.41" level="project" />
     <orderEntry type="library" exported="" name="retrofit-2.2.0" level="project" />
+    <orderEntry type="library" exported="" name="HdrHistogram-2.1.9" level="project" />
+    <orderEntry type="library" exported="" name="minlog-1.3.0" level="project" />
+    <orderEntry type="library" exported="" name="quasar-core-0.7.8" level="project" />
+    <orderEntry type="library" exported="" name="reflectasm-1.11.3" level="project" />
     <orderEntry type="library" exported="" name="gson-2.7" level="project" />
     <orderEntry type="library" exported="" name="play-services-tasks-10.0.1" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-24.0.0" level="project" />
@@ -112,10 +119,11 @@
     <orderEntry type="library" exported="" name="play-services-base-10.0.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-basement-10.0.1" level="project" />
     <orderEntry type="library" exported="" name="okhttp-3.6.0" level="project" />
-    <orderEntry type="library" exported="" name="appcompat-v7-23.0.0" level="project" />
+    <orderEntry type="library" exported="" name="guava-20.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="hamcrest-core-1.3" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="junit-4.12" level="project" />
     <orderEntry type="library" exported="" name="play-services-location-10.0.1" level="project" />
+    <orderEntry type="library" exported="" name="objenesis-2.2" level="project" />
     <orderEntry type="module" module-name="openCVLibrary249" exported="" />
   </component>
 </module>

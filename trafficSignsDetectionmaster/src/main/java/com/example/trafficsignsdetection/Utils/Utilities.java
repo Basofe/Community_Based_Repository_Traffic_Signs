@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,8 +28,10 @@ import static org.opencv.imgproc.Imgproc.resize;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -221,6 +224,23 @@ public class Utilities {
 		eqBitmap = convertMatToBitmap(eqImg); //converts mat to bitmap
 
 		return eqBitmap;
+	}
+
+
+	public static Bitmap getBitmapFromAsset(Context context, String filePath) {
+		AssetManager assetManager = context.getAssets();
+        //String label = "file:///android_asset/"+filePath;
+
+		InputStream istr;
+		Bitmap bitmap = null;
+		try {
+			istr = assetManager.open("images/"+filePath);
+			bitmap = BitmapFactory.decodeStream(istr);
+		} catch (IOException e) {
+			// handle exception
+		}
+
+		return bitmap;
 	}
 
 	static int R_EARTH = 6378;

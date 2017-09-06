@@ -48,7 +48,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			startActivity(sensorsTest);
 			return;
 		case R.id.btPickPhoto:
-			Intent databaseIntent = new Intent(MainActivity.this, FocalLenghtActivity.class);
+			Intent databaseIntent = new Intent(MainActivity.this, DatabaseActivity.class);
 			startActivity(databaseIntent);
 			break;
 		default:

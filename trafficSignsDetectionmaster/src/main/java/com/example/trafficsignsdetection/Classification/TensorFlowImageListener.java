@@ -55,14 +55,15 @@ public class TensorFlowImageListener {
                 INPUT_NAME, OUTPUT_NAME);
     }
 
-    public String recognizeSign(Bitmap signBitmap){
-        String res = "";
+    public String[] recognizeSign(Bitmap signBitmap){
+        String res[] = new String[2];
         final List<Classifier.Recognition> results = tensorflow.recognizeImage(signBitmap);
 
         LOGGER.v("%d results", results.size());
         for (final Classifier.Recognition result : results) {
             //LOGGER.v("Result: " + result.getTitle());
-            res = result.getTitle();
+            res[0] = result.getTitle();
+            res[1] = result.getId();
         }
 
         return res;

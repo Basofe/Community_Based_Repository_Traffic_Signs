@@ -75,13 +75,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Insert new traffic sign"
-        android:id="@+id/button"
+        android:id="@+id/buttonInsert"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/buttonGet" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Get all Signs"
+        android:id="@+id/buttonGet"
         android:layout_below="@+id/editText3"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="72dp"
-        android:layout_alignRight="@+id/editText3"
-        android:layout_alignEnd="@+id/editText3" />
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/buttonInsert" />
 
     <TextView
         android:layout_width="wrap_content"

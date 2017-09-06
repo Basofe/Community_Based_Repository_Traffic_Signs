@@ -1,8 +1,7 @@
 package com.example.trafficsignsdetection;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.HashMap;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -31,18 +30,16 @@ import android.location.Location;
 import android.os.Bundle;
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.example.trafficsignsdetection.Communication.RetrofitMethods;
-import com.example.trafficsignsdetection.Communication.SignInfo;
+import com.example.trafficsignsdetection.Communication.SignData;
+import com.example.trafficsignsdetection.Database.Coordinate;
 import com.example.trafficsignsdetection.Detection.Detector;
 import com.example.trafficsignsdetection.Detection.Sign;
 import com.example.trafficsignsdetection.Detection.itemAdapter;
@@ -54,6 +51,7 @@ import com.example.trafficsignsdetection.Utils.Utilities;
 import static com.example.trafficsignsdetection.Utils.Utilities.averageImageIntensity;
 import static com.example.trafficsignsdetection.Utils.Utilities.calculateShift;
 import static com.example.trafficsignsdetection.Utils.Utilities.equalizeBitmap;
+import static com.example.trafficsignsdetection.Utils.Utilities.getBitmapFromAsset;
 import static com.example.trafficsignsdetection.Utils.Utilities.overspeed;
 
 public class CameraActivity extends Activity implements CvCameraViewListener2, SensorEventListener{
@@ -61,11 +59,10 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 	FusedLocationSingleton fusedInstance;
 	private TensorFlowImageListener tfPreviewListener;
 	Utilities utils;
-	SignInfo signInfo;
 	String coordinates;
 	double lat = 0.0, lon = 0.0;
 
-	String signRecognized = "";
+	String[] signRecognized = new String[2];
 	String signEq = "";
 	String str = "";
 	String str2 = "";
@@ -80,6 +77,13 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 
 	private Sensor rotationVector;
 	private SensorManager SM;
+	Coordinate c;
+	SignData sign;
+
+	private HashMap<Coordinate, SignData> stopMap;
+	private HashMap<Coordinate, SignData> dangerMap;
+	private HashMap<Coordinate, SignData> prohibitionMap;
+	private HashMap<Coordinate, SignData> mandatoryMap;
 
 	private static final Scalar    FACE_RECT_COLOR     = new Scalar(0, 255, 0, 255);
 	private CameraBridgeViewBase mCameraView;
@@ -139,7 +143,11 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 
 		//UTILITIES
 		utils = new Utilities();
-		retrofit = new RetrofitMethods();
+		retrofit = new RetrofitMethods(getApplicationContext());
+		stopMap = new HashMap<>();
+		dangerMap = new HashMap<>();
+		prohibitionMap = new HashMap<>();
+		mandatoryMap = new HashMap<>();
 	}
 
 	@Override
@@ -234,74 +242,74 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 		mRgba = inputFrame.rgba();
 		mGray = inputFrame.gray();
 
-		Thread prohibitionThread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				detector.Detect(mGray, signs, cascadeClassifier);
-				Rect[] prohibitionArray = signs.toArray();
-				Draw(prohibitionArray, 1);
-			}
-		});
-
-		Thread dangerThread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				detector.Detect(mGray, signs, cascadeClassifier2);
-				Rect[] dangerArray = signs.toArray();
-				Draw(dangerArray, 2);
-			}
-		});
-
-		Thread stopThread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				detector.Detect(mGray, signs, cascadeClassifier3);
-				Rect[] stopArray = signs.toArray();
-				Draw(stopArray, 3);
-			}
-		});
-
-		Thread mandatoryThread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				detector.Detect(mGray, signs, cascadeClassifier4);
-				Rect[] mandatoryArray = signs.toArray();
-				Draw(mandatoryArray, 4);
-			}
-		});
-
 		if(speed >= 0.0){
 			Imgproc.equalizeHist(mGray, mGray);
 			listSign = new ArrayList<Sign>();
 
-//			dangerThread.start();
-//			prohibitionThread.start();
-//			stopThread.start();
-//			mandatoryThread.start();
-
 			switch(counter){
 
 				case 1:
-//					dangerThread.start();
+					Thread prohibitionThread = new Thread(new Runnable() {
+						@Override
+						public void run() {
+							detector.Detect(mGray, signs, cascadeClassifier);
+							Rect[] prohibitionArray = signs.toArray();
+							Draw(prohibitionArray, 1);
+						}
+					});
+
+					Thread dangerThread = new Thread(new Runnable() {
+						@Override
+						public void run() {
+							detector.Detect(mGray, signs, cascadeClassifier2);
+							Rect[] dangerArray = signs.toArray();
+							Draw(dangerArray, 2);
+						}
+					});
+
 					prohibitionThread.start();
+					dangerThread.start();
+
+
+					try {
+						prohibitionThread.join();
+						dangerThread.join();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 					break;
 
 				case 2:
-//					stopThread.start();
+					Thread stopThread = new Thread(new Runnable() {
+						@Override
+						public void run() {
+							detector.Detect(mGray, signs, cascadeClassifier3);
+							Rect[] stopArray = signs.toArray();
+							Draw(stopArray, 3);
+						}
+					});
+
+					Thread mandatoryThread = new Thread(new Runnable() {
+						@Override
+						public void run() {
+							detector.Detect(mGray, signs, cascadeClassifier4);
+							Rect[] mandatoryArray = signs.toArray();
+							Draw(mandatoryArray, 4);
+						}
+					});
+
+					stopThread.start();
 					mandatoryThread.start();
+
+					try {
+						stopThread.join();
+						mandatoryThread.join();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 					break;
 			}
-
 			counterAdder();
-
-			try {
-//				dangerThread.join();
-				prohibitionThread.join();
-				mandatoryThread.join();
-//				stopThread.join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 		}
 
         //Core.rectangle(inputFrame, facesArray[i].tl(), facesArray[i].br(), new Scalar(0, 255, 0, 255), 3);*/
@@ -314,59 +322,6 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 		}
 		counter++;
 	}
-
-	/*public void Draw(Rect[] facesArray){
-		if(facesArray.length<=0){
-			runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					listRelativeLayout.setVisibility(View.GONE);
-				}
-			});
-
-		}
-		for (int i = 0; i <facesArray.length; i++){
-			Bitmap bt;
-			Bitmap eq;
-			final int ii = i;
-			double cx = 0.0;
-			final double x = facesArray[i].tl().x;
-			//double y = facesArray[i].tl().y;
-			final int width = facesArray[i].width;
-			int p = x >= 320 ? -1:1;
-
-			Mat subMat;
-			subMat = mRgba.submat(facesArray[i]);
-			bt = Utilities.convertMatToBitmap(subMat);
-			Sign.myMap.put("image"+i, bt);
-			eq = equalizeBitmap(bt);
-			//signRecognized = tfPreviewListener.recognizeSign(bt);
-			signEq = tfPreviewListener.recognizeSign(eq);
-			azAtual = (float) (azimuth - 1.57);
-			cx = calculateShift(width);
-			coords = utils.distanceToCoordinateAzimuth(lat, lon, cx, 0.00005, azAtual, -1);
-
-			Core.rectangle(mRgba,facesArray[i].tl(), facesArray[i].br(), FACE_RECT_COLOR, 2);
-
-			runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					str = "Eq - " + signEq;
-					Sign sign = new Sign(str, "image"+ii);
-					listSign.add(sign);
-					listRelativeLayout.setVisibility(View.VISIBLE);
-					itemAdapter adapter= new itemAdapter(listSign, CameraActivity.this);
-					adapter.notifyDataSetChanged();
-					listDetectedSigns.setAdapter(adapter);
-				}
-			});
-
-		}
-	}*/
 
 	public void recognizeAndGeoreference(int type, Mat subMat, int width){
         Bitmap bt = Utilities.convertMatToBitmap(subMat);
@@ -382,16 +337,25 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
         } else if (type == 4){
             signType = "Mandatory";
         }
-        Sign.myMap.put(signType + " sign - Width "+width, bt);
 		averageIntensity = averageImageIntensity(bt);
-		if(averageIntensity < 50 || averageIntensity > 210){
+
+		if(averageIntensity < 50 || averageIntensity > 220){
 			eq = equalizeBitmap(bt);
-			signEq = tfPreviewListener.recognizeSign(eq);
+			signRecognized = tfPreviewListener.recognizeSign(eq);
+			//signEq = tfPreviewListener.recognizeSign(eq);
 		}
-		signRecognized = tfPreviewListener.recognizeSign(bt);
+		else{
+			signRecognized = tfPreviewListener.recognizeSign(bt);
+		}
+
+		Bitmap label = getBitmapFromAsset(getApplicationContext(), signRecognized[1]+".png");
+		Sign.myMap.put(signType + " sign - Width "+width, label);
+
 		azAtual = (float) (azimuth - 0.6);
 		cy = calculateShift(width);
 		coords = utils.distanceToCoordinateAzimuth(lat, lon, cy, 0.00005, azAtual, -1);
+		c = new Coordinate(lat,lon);
+		sign = new SignData(signRecognized[0], String.valueOf(lat), String.valueOf(lon), String.valueOf(azAtual), signType);
 	}
 
 	public void Draw(Rect[] facesArray, int type){
@@ -401,20 +365,21 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 
 				@Override
 				public void run() {
-					listRelativeLayout.setVisibility(View.GONE);
+                    listRelativeLayout.setVisibility(View.GONE);
 					// TODO Auto-generated method stub
-//					new CountDownTimer(5000,1000){
+//                    final CountDownTimer timer = new CountDownTimer(3000,1000){
 //						@Override
 //						public void onTick(long millisUntilFinished){}
 //
 //						@Override
 //						public void onFinish(){
-//							set the new Content of your activity
 //							listRelativeLayout.setVisibility(View.GONE);
 //						}
-//					}.start();
+//					};
+//                    timer.start();
 				}
 			});
+
         }
 
 
@@ -428,7 +393,10 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
         	subMat = mRgba.submat(facesArray[i]);
 			if(typee == 1){
 				recognizeAndGeoreference(typee, subMat,width);
-				str2 = overspeed(signRecognized, speedLimit, speed);
+				str2 = overspeed(signRecognized[0], speedLimit, speed);
+				if(!prohibitionMap.containsKey(c)){
+					prohibitionMap.put(c, sign);
+				}
 				//signInfo = new SignInfo(signRecognized, String.valueOf(coords[1]), String.valueOf(coords[0]));
 				//retrofit.uploadSignInfo(signInfo);
 //				str = "Prohibition\n---------------------------------\nN - " + signRecognized + " || Eq - " + signEq;
@@ -437,6 +405,9 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 			}
 			else if(typee == 2){
                 recognizeAndGeoreference(typee,subMat,width);
+				if(!dangerMap.containsKey(c)){
+					dangerMap.put(c,sign);
+				}
 				//signInfo = new SignInfo(signRecognized, String.valueOf(coords[1]), String.valueOf(coords[0]));
 				//retrofit.uploadSignInfo(signInfo);
 //				str = "Danger\n---------------------------------\nN - " + signRecognized + " || Eq - " + signEq;
@@ -445,12 +416,18 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 			}
 			else if(typee == 3){
                 recognizeAndGeoreference(typee,subMat,width);
+				if(!stopMap.containsKey(c)){
+					stopMap.put(c, sign);
+				}
 //				str = "Stop\n---------------------------------\nN - " + signRecognized + " || Eq - " + signEq;
 //				utils.writeToFile(str + " - " + coordinates + " | " + coords[1] + ", " + coords[0] + " - " + azAtual
 //						+ " - " + width + "\n---------------------------------\n", getApplicationContext());
 			}
             else {
                 recognizeAndGeoreference(typee,subMat,width);
+				if(!mandatoryMap.containsKey(c)){
+					mandatoryMap.put(c, sign);
+				}
 //				str = "Mandatory\n---------------------------------\nN - " + signRecognized + " || Eq - " + signEq;
 //				utils.writeToFile(str + " - " + coordinates + " | " + coords[1] + ", " + coords[0] + " - " + azAtual
 //						+ " - " + width + "\n---------------------------------\n", getApplicationContext());
@@ -464,17 +441,17 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, S
 					// TODO Auto-generated method stub
 					Sign sign;
 					if(typee == 1) {
-						str = "N - " + signRecognized + " || Eq - " + signEq + " || Intensity - " + averageIntensity;
+						str = "N - " + signRecognized[0] + " || Eq - " + signEq + " || Intensity - " + averageIntensity;
 						sign = new Sign(str + "\n" + str2, "Prohibition sign - Width " + width);
 					} else if(typee == 2) {
-						str = "N - " + signRecognized + " || Eq - " + signEq + " || Intensity - " + averageIntensity;
+						str = "N - " + signRecognized[0] + " || Eq - " + signEq + " || Intensity - " + averageIntensity;
 						sign = new Sign(str, "Danger sign - Width " + width);
 					} else if(typee == 3){
-						str = "N - " + signRecognized + " || Eq - " + signEq + " || Intensity - " + averageIntensity;
+						str = "N - " + signRecognized[0] + " || Eq - " + signEq + " || Intensity - " + averageIntensity;
 						sign = new Sign(str, "Stop sign - Width "+width);
 					}
                     else{
-						str = "N - " + signRecognized + " || Eq - " + signEq + " || Intensity - " + averageIntensity;
+						str = "N - " + signRecognized[0] + " || Eq - " + signEq + " || Intensity - " + averageIntensity;
 						sign = new Sign(str, "Mandatory sign - Width "+width);
                     }
 					
