@@ -169,7 +169,7 @@ public class PhotoActivity extends Activity implements OnClickListener{
         	ivv.setImageBitmap(Utilities.convertMatToBitmap(subMat));
         	
         	Sign.myMap.put("image"+i, Utilities.convertMatToBitmap(subMat));
-        	Sign sign = new Sign("unknown", "image"+i);
+        	Sign sign = new Sign("unknown", "image"+i, System.currentTimeMillis());
         	
         	listSign.add(sign);
         	layoutResult.addView(ivv);

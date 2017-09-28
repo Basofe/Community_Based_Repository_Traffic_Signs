@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -30,24 +31,6 @@ public class RetrofitMethods {
 
     public Controller getController(){
         return this.controller;
-    }
-
-    public void uploadSignInfo(String name, String orientation, String latitude, String longitude) {
-        API getResponse = AppConfig.getRetrofit().create(API.class);
-        Call<ResponseBody> call = getResponse.uploadSign(name, orientation, latitude, longitude);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    System.out.println(response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
-        });
     }
 
     public void uploadSignArray(SignsData coords) {
@@ -79,13 +62,14 @@ public class RetrofitMethods {
 
     public void getSigns(String latitude, String longitude) {
         API getResponse = AppConfig.getRetrofit().create(API.class);
-        Call<ArrayList<Sign>> call = getResponse.getSigns(latitude,longitude);
+        Call<ArrayList<Sign>> call = getResponse.getSigns(latitude, longitude);
         call.enqueue(new Callback<ArrayList<Sign>>() {
             @Override
             public void onResponse(Call<ArrayList<Sign>> call, Response<ArrayList<Sign>> response) {
                 if (response.isSuccessful()) {
                     System.out.println("Response: " + response.code());
                     List<Sign> rs = response.body();
+                    System.out.println("TAMANHO: " + rs.size());
                     controller.insertSigns(rs);
                     System.out.println("Terminou!");
 

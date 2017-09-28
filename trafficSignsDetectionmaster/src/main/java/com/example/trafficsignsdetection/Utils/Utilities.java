@@ -35,6 +35,10 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+
+import com.example.trafficsignsdetection.Communication.SignData;
+import com.example.trafficsignsdetection.Database.Sign;
+import com.google.gson.Gson;
 //import android.util.Log;
 
 public class Utilities {
@@ -190,6 +194,24 @@ public class Utilities {
 		}
 	}
 
+	public static void writeJson(SignData sign, Context context) {
+		try {
+			Gson gson = new Gson();
+			String data = gson.toJson(sign);
+
+			File file = getOutputMediaFile(context);
+			FileOutputStream stream = new FileOutputStream(file,true);
+			try {
+				stream.write(data.getBytes());
+			} finally {
+				stream.close();
+			}
+		}
+		catch (IOException e) {
+			//Log.e("Exception", "File write failed: " + e.toString());
+		}
+	}
+
 	public static int averageImageIntensity(Bitmap bitmap) {
 		double averageIntensity = 0;
 
@@ -280,27 +302,19 @@ public class Utilities {
 		return latitudeShiftInDegrees;
 	}
 
-	public static String overspeed(String signRecognized, float speedLimit, float speed ){
+	public static float overspeed(String signRecognized, float speed){
 
 		String str = "";
+		float speedLimit = 0.0f;
 
 		if(signRecognized.equals("20\r") || signRecognized.equals("30\r")
 				|| signRecognized.equals("50\r") || signRecognized.equals("60\r")
 				|| signRecognized.equals("70\r") || signRecognized.equals("80\r")
 				|| signRecognized.equals("100\r") || signRecognized.equals("120\r")){
 			speedLimit = Float.parseFloat(signRecognized);
-			if(speed > speedLimit){
-				str = "Speed limit exceeded! Please slow down!";
-			}
-			else {
-				str = "Below speed limit";
-			}
-		}
-		else{
-			str = "";
 		}
 
-		return str;
+		return speedLimit;
 	}
 
 }

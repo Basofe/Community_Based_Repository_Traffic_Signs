@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.trafficsignsdetection.Communication.SignData;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -108,35 +110,26 @@ public class Controller {
         return collection;
     }
 
-    public HashMap<Integer, ArrayList<Sign>> getSignsHashArrayOptimized() {
+    public ArrayList<SignData> getSignsFromOrientation(int key) {
 
         Cursor result;
-        HashMap<Integer, ArrayList<Sign>> collection = new HashMap<>();
-        ArrayList<Sign> coords;
+        ArrayList<SignData> array = new ArrayList<>();
         db = model.getWritableDatabase();
 
-        result = db.rawQuery("select * from 'signs'", null);
+        result = db.rawQuery("SELECT * FROM signs WHERE acos(sin(? * 0.0175) * sin(latitude * 0.0175)" +
+                " + cos(? * 0.0175) * cos(latitude * 0.0175) * cos(longitude * 0.0175 - (? * 0.0175))) *" +
+                " 6371 <= 0.5 AND orientation BETWEEN " + key + " AND " + key + ".99", null);
+
         while (result.moveToNext()) {
-            Sign c = new Sign();
-            c.setSignName(result.getString(1));
-            c.setLatitude(result.getString(3));
-            c.setLongitude(result.getString(4));
-            c.setType(result.getString(5));
-
-            char index = result.getString(2).charAt(0);
-            int key = Character.getNumericValue(index);
-
-            coords = collection.get(key);
-            if(coords != null) {
-                coords.add(c);
-            } else {
-                coords = new ArrayList<>();
-                coords.add(c);
-                collection.put(key, coords);
-            }
+            SignData signData = new SignData();
+            signData.setSignName(result.getString(1));
+            signData.setLatitude(result.getString(3));
+            signData.setLongitude(result.getString(4));
+            signData.setType(result.getString(5));
+            array.add(signData);
         }
 
-        return collection;
+        return array;
     }
 
     public ArrayList<Sign> getAllSigns() {

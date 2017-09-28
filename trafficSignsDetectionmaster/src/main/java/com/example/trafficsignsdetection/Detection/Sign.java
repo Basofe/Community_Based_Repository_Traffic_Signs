@@ -13,33 +13,40 @@ public class Sign implements Parcelable{
 	
 	private String Name;
 	private String image;
+	private long expirationTime;
 	
 	public String getImage() {
 		return image;
 	}
-	public Sign(String name, String image) {
+
+	public Sign(String name, String image, long time) {
 		super();
 		Name = name;
 		this.image = image;
+		this.expirationTime = time;
 	}
 	public void setImage(String image) {
 		this.image = image;
 	}
+
 	public Sign(String signRecognized, String s, String valueOf) {
 		
 	}
 	public Sign(Parcel source) {
         Name = source.readString();
-        //byteArray = source.createByteArray();
-        //byteArray = source.readParcelable(null);
         image = source.readString();
+		expirationTime = source.readLong();
     }
+
 	public String getName() {
 		return Name;
 	}
+
 	public void setName(String name) {
 		Name = name;
 	}
+
+
 	
 	@Override
 	public int describeContents() {
@@ -50,8 +57,8 @@ public class Sign implements Parcelable{
 	public void writeToParcel(Parcel dest, int flags) {
 		// TODO Auto-generated method stub
 		dest.writeString(Name);
-		//dest.writeByteArray(byteArray);
 		dest.writeString(image);
+		dest.writeLong(getExpirationTime());
 	}
 	 public static final Parcelable.Creator CREATOR
      = new Parcelable.Creator() {
@@ -63,4 +70,12 @@ public class Sign implements Parcelable{
 	     	return new Sign[size];
 	 	}
 	 };
+
+	public long getExpirationTime() {
+		return expirationTime;
+	}
+
+	public void setExpirationTime(long expirationTime) {
+		this.expirationTime = expirationTime;
+	}
 }

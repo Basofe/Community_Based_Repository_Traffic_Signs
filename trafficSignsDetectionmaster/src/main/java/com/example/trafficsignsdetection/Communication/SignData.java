@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class SignData {
-    @SerializedName("name")
+    @SerializedName("signName")
     @Expose
     private String signName;
     @SerializedName("latitude")

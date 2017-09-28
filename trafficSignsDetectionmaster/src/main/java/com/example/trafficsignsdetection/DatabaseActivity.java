@@ -19,6 +19,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -40,21 +41,13 @@ public class DatabaseActivity extends Activity {
             public void onClick(View v) {
                 RetrofitMethods rm = new RetrofitMethods(getApplicationContext());
 
-                rm.getSigns("41.56321","-8.39421");
+                rm.getSigns("41.56", "-8.39");
             }
         });
 
         botaoGet.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Controller controller = new Controller(getApplicationContext());
-
-                HashMap<Integer, ArrayList<Sign>> hash;
-                hash = controller.getSignsHashArrayOptimized();
-
-                for(int i = 0; i<7; i++){
-                    System.out.println("LISTSIZE: " + hash.get(i));
-                }
 
                 //Toast.makeText(getApplicationContext(), list.get(0).toString() + " | SIZE: " + list.size(), Toast.LENGTH_SHORT);
             }

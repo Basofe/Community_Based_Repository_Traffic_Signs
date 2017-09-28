@@ -11,7 +11,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class AppConfig {
 
     private static String BASE_URL = "https://traffic-signs-repository.herokuapp.com";
-    private static String LOCALHOST_URL = "https://localhost:4300";
 
     @NonNull
     static Retrofit getRetrofit() {

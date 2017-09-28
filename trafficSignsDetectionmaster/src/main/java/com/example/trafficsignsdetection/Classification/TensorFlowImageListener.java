@@ -62,7 +62,7 @@ public class TensorFlowImageListener {
         LOGGER.v("%d results", results.size());
         for (final Classifier.Recognition result : results) {
             //LOGGER.v("Result: " + result.getTitle());
-            res[0] = result.getTitle();
+            res[0] = result.getTitle().replaceAll("(\\r)", "");;
             res[1] = result.getId();
         }
 

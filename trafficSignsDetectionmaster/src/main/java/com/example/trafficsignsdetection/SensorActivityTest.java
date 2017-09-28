@@ -46,6 +46,7 @@ public class SensorActivityTest extends Activity implements SensorEventListener,
     Camera.Parameters params;
 
     double azimuth = 0.0;
+    double bearing = 0.0;
     float[] orientationVals;
     double focal_length_pix;
     Camera.Size previewSize;
@@ -109,8 +110,8 @@ public class SensorActivityTest extends Activity implements SensorEventListener,
     public void onResume() {
         super.onResume();
 
-        SM.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
-        SM.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
+        //SM.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
+        //SM.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
         SM.registerListener(this, rotationVector, SensorManager.SENSOR_DELAY_GAME);
 
         mBearingProvider.start();
@@ -167,6 +168,9 @@ public class SensorActivityTest extends Activity implements SensorEventListener,
     @Override
     public void onBearingChanged(double bearing) {
         //speedarinho.setText(String.valueOf(Math.round(bearing * 10.0) / 10.0));
-        speedarinho.setText(String.valueOf(focal_length_pix));
+        //speedarinho.setText(String.valueOf(focal_length_pix));
+        bearing = (int) (mBearingProvider.getBearing() + 360 ) % 360;
+
+        speedarinho.setText(String.valueOf((float)Math.toRadians(bearing)) + " - " + String.valueOf(bearing));
     }
 }

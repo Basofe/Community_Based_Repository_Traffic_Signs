@@ -3,19 +3,22 @@
     android:id="@+id/LinearLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient"
     android:orientation="vertical"
 >
 
-    <TextView
+    <!--TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:text="@string/hello_world" /-->
 
     <Button
         android:id="@+id/btRuntime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/camera_icon"
+        android:background="@drawable/button_color"
+        android:textColor="@color/white"
         android:text="Run in real-time" />
 
     <Button
@@ -23,6 +26,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/search_icon"
+        android:background="@drawable/button_color"
+        android:textColor="@color/white"
         android:text="Test Database" />
 
     <Button
@@ -30,6 +35,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/add_icon"
+        android:background="@drawable/button_color"
+        android:textColor="@color/white"
         android:text="Test Sensor" />
 
 </LinearLayout>

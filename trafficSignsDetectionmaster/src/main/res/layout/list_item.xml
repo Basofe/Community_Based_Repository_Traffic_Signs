@@ -46,7 +46,7 @@
         android:layout_alignRight="@+id/imageView1"
         android:layout_alignTop="@+id/thumbnail"
         android:layout_toRightOf="@+id/thumbnail"
-        android:text="Rihanna Love the way lie"
+        android:text="Things"
         android:textSize="18dip"
         android:textStyle="bold"
         android:typeface="sans" />
